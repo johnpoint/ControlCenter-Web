@@ -218,7 +218,9 @@
                     var statusdata = JSON.parse(data[0]["status"])
                     $('#serverip')[0].innerHTML = data[0]["ipv4"]
                     $('#ipv4')[0].innerHTML = data[0]["ipv4"]
-                    $('#ipv6')[0].innerHTML = data[0]["ipv6"]
+                    if (data[0]["ipv4"] != data[0]["ipv6"]) {
+                        $('#ipv6')[0].innerHTML = data[0]["ipv6"]
+                    }
                     $('#hostname')[0].innerHTML = data[0]["hostname"]
                     $('#cpuinfo')[0].innerHTML = statusdata["CPU"][0].ModelName + ' * ' + statusdata["CPU"].length
                 },
