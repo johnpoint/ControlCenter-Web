@@ -170,8 +170,10 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Certificate Manager</h4>
                     </div>
-                    <div class="modal-body" id="cerlist">
-                        <p>Loading...</p>
+                    <div class="modal-body">
+                        <p id="ld">Loading...</p>
+                        <div id="cerlist">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
@@ -307,6 +309,8 @@
             setCookie(name, "", -1);
         }
         function loadcerlist() {
+            $('#cerlist').hide();
+            $('#ld').show();
             $.ajax({
                 "url": apiaddress + "/web/Certificate",
                 "method": "GET",
@@ -344,6 +348,8 @@
                             }
                         }
                     })
+                    $('#cerlist').show();
+                    $('#ld').hide();
                 }
             });
 
