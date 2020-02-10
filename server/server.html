@@ -220,6 +220,8 @@
                     $('#ipv4')[0].innerHTML = data[0]["ipv4"]
                     if (data[0]["ipv4"] != data[0]["ipv6"]) {
                         $('#ipv6')[0].innerHTML = data[0]["ipv6"]
+                    } else {
+                        $('#ipv6')[0].innerHTML = "";
                     }
                     $('#hostname')[0].innerHTML = data[0]["hostname"]
                     $('#cpuinfo')[0].innerHTML = statusdata["CPU"][0].ModelName + ' * ' + statusdata["CPU"].length
