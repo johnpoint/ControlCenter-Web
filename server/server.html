@@ -329,23 +329,23 @@
                             $('.cername')[index].style.color = "red";
                         }
                     }
+                    $.ajax({
+                        "url": apiaddress + "/web/ServerInfo/Certificate",
+                        "method": "GET",
+                        "headers": {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Authorization": "Bearer " + userjwt
+                        },
+                        data: { ipv4: window.location.search.replace('?ip=', '') },
+                        success: function (data) {
+                            for (let index = 0; index < data.length; index++) {
+                                $('#' + data[index].CertificateID + 'add').hide();
+                                $('#' + data[index].CertificateID + 'remove').show();
+                            }
+                        }
+                    })
                 }
             });
-            $.ajax({
-                "url": apiaddress + "/web/ServerInfo/Certificate",
-                "method": "GET",
-                "headers": {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": "Bearer " + userjwt
-                },
-                data: { ipv4: window.location.search.replace('?ip=', '') },
-                success: function (data) {
-                    for (let index = 0; index < data.length; index++) {
-                        $('#' + data[index].CertificateID + 'add').hide();
-                        $('#' + data[index].CertificateID + 'remove').show();
-                    }
-                }
-            })
 
         }
 
