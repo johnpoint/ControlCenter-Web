@@ -300,10 +300,10 @@
                         $('#load5')[0].innerHTML = statusdata["Load"]["load5"].toFixed(2)
                         $('#load15')[0].innerHTML = statusdata["Load"]["load15"].toFixed(2)
                         $('#mem')[0].style.width = statusdata["Percent"]["Mem"] + '%'
-                        memp.push(statusdata["Percent"]["Mem"] * 2)
+                        memp.push(statusdata["Percent"]["Mem"] * 1.5)
                         $('#mem')[0].innerHTML = parseInt(statusdata["Percent"]["Mem"]) + '%'
                         $('#cpu')[0].style.width = statusdata["Percent"]["CPU"] + '%'
-                        cpup.push(statusdata["Percent"]["CPU"] * 2)
+                        cpup.push(statusdata["Percent"]["CPU"] * 1.5)
                         $('#cpu')[0].innerHTML = parseInt(statusdata["Percent"]["CPU"]) + '%'
                         $('#disk')[0].style.width = statusdata["Percent"]["Disk"] + '%'
                         $('#disk')[0].innerHTML = parseInt(statusdata["Percent"]["Disk"]) + '%'
