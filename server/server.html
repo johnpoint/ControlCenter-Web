@@ -213,8 +213,8 @@
                         <h4 class="modal-title" id="myModalLabel">Site Manager</h4>
                     </div>
                     <div class="modal-body">
-                        <p id="ld">Loading...</p>
-                        <div id="cerlist">
+                        <p id="ld2">Loading...</p>
+                        <div id="sitelist">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -395,6 +395,47 @@
         function clearCookie(name) {
             setCookie(name, "", -1);
         }
+        function loadsitelist() {
+            $('#sitelist').hide();
+            $('#ld2').show();
+            $.ajax({
+                "url": apiaddress + "/web/SiteInfo?name=*",
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": "Bearer " + userjwt
+                },
+                success: function (data) {
+                    var dom = ""
+                    for (let index = 0; index < data.length; index++) {
+                        dom += '<p><button type="button" class="btn btn-default">' + data[index].name + '</button><button type="button" id="' + data[index].ID + 'adds" class="btn btn-info" onclick="link(' + data[index].ID + ',\'site\')">add</button><button type="button" id="' + data[index].ID + 'removes" class="btn btn-danger" onclick="unlink(' + data[index].ID + ',\'site\')">remove</button></p>';
+                    }
+                    $('#sitelist')[0].innerHTML = dom;
+                    for (let index = 0; index < data.length; index++) {
+                        $('#' + data[index].ID + 'adds').show();
+                        $('#' + data[index].ID + 'removes').hide();
+                    }
+                    $.ajax({
+                        "url": apiaddress + "/web/ServerInfo/Site",
+                        "method": "GET",
+                        "headers": {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Authorization": "Bearer " + userjwt
+                        },
+                        data: { ipv4: window.location.search.replace('?ip=', '') },
+                        success: function (data) {
+                            for (let index = 0; index < data.length; index++) {
+                                $('#' + data[index].SiteID + 'adds').hide();
+                                $('#' + data[index].SiteID + 'removes').show();
+                            }
+                            $('#sitelist').show();
+                            $('#ld2').hide();
+                        }
+                    })
+                }
+            });
+        }
         function loadcerlist() {
             $('#cerlist').hide();
             $('#ld').show();
@@ -409,7 +450,7 @@
                 success: function (data) {
                     var dom = ""
                     for (let index = 0; index < data.length; index++) {
-                        dom += '<p><button type="button" class="btn btn-default cername">' + data[index].name + '[' + data[index].DNSNames + ']</button><button type="button" id="' + data[index].id + 'add" class="btn btn-info" onclick="link(' + data[index].id + ')">add</button><button type="button" id="' + data[index].id + 'remove" class="btn btn-danger" onclick="unlink(' + data[index].id + ')">remove</button></p>';
+                        dom += '<p><button type="button" class="btn btn-default cername">' + data[index].name + '[' + data[index].DNSNames + ']</button><button type="button" id="' + data[index].id + 'add" class="btn btn-info" onclick="link(' + data[index].id + ',\'cer\')">add</button><button type="button" id="' + data[index].id + 'remove" class="btn btn-danger" onclick="unlink(' + data[index].id + ',\'cer\')">remove</button></p>';
                     }
                     $('#cerlist')[0].innerHTML = dom;
                     for (let index = 0; index < data.length; index++) {
@@ -439,10 +480,14 @@
                     })
                 }
             });
-
         }
 
-        function link(cer) {
+        function link(cer, type) {
+            if (type == "cer") {
+                type = "Certificate"
+            } else {
+                type = "Site"
+            }
             $.ajax({
                 "url": apiaddress + "/web/ServerInfo",
                 "method": "GET",
@@ -455,15 +500,20 @@
                 success: function (data) {
                     var serverid = data[0]["ID"]
                     $.ajax({
-                        url: apiaddress + "/web/link/Certificate/" + serverid + "/" + cer,
+                        url: apiaddress + "/web/link/" + type + "/" + serverid + "/" + cer,
                         method: "PUT",
                         "headers": {
                             "Content-Type": "application/x-www-form-urlencoded",
                             "Authorization": "Bearer " + userjwt
                         },
                         success: function () {
-                            $('#' + cer + 'add').hide();
-                            $('#' + cer + 'remove').show();
+                            if (type == "Site") {
+                                $('#' + cer + 'adds').hide();
+                                $('#' + cer + 'removes').show();
+                            } else {
+                                $('#' + cer + 'add').hide();
+                                $('#' + cer + 'remove').show();
+                            }
                         }
                     })
                 },
@@ -472,7 +522,12 @@
                 }
             });
         }
-        function unlink(cer) {
+        function unlink(cer, type) {
+            if (type == "cer") {
+                type = "Certificate"
+            } else {
+                type = "Site"
+            }
             $.ajax({
                 "url": apiaddress + "/web/ServerInfo",
                 "method": "GET",
@@ -485,15 +540,20 @@
                 success: function (data) {
                     var serverid = data[0]["ID"]
                     $.ajax({
-                        url: apiaddress + "/web/link/Certificate/" + serverid + "/" + cer,
+                        url: apiaddress + "/web/link/" + type + "/" + serverid + "/" + cer,
                         method: "DELETE",
                         "headers": {
                             "Content-Type": "application/x-www-form-urlencoded",
                             "Authorization": "Bearer " + userjwt
                         },
                         success: function () {
-                            $('#' + cer + 'add').show();
-                            $('#' + cer + 'remove').hide();
+                            if (type == "Site") {
+                                $('#' + cer + 'adds').show();
+                                $('#' + cer + 'removes').hide();
+                            } else {
+                                $('#' + cer + 'add').show();
+                                $('#' + cer + 'remove').hide();
+                            }
                         }
                     })
                 },
