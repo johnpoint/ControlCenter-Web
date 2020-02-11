@@ -155,7 +155,9 @@
                     <div class="panel-body">
                         <div class="container">
                             <div class="row">
-                                <a type="button" class="btn btn-default" data-toggle="modal" data-target="#cerman"
+                                <a type="button" class="btn btn-default" data-toggle="modal" data-target="#siteman"
+                                    onclick="loadsitelist()">Site Manager</a>
+                                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#cerman"
                                     onclick="loadcerlist()">Certificate Manager</a>
                                 <a type="button" class="btn btn-danger" data-toggle="modal"
                                     data-target="#rmser">Detele</a>
@@ -190,6 +192,25 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Certificate Manager</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="ld">Loading...</p>
+                        <div id="cerlist">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="siteman" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Site Manager</h4>
                     </div>
                     <div class="modal-body">
                         <p id="ld">Loading...</p>

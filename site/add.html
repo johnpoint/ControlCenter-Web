@@ -54,10 +54,11 @@
                                             <option value="">NULL</option>
                                         </select>
                                     </div>
-
                                 </div>
 
                                 <div class="form-group">
+                                    <p><input type="checkbox" id="return301"> 301 跳转 https</p>
+                                    <p><input type="checkbox" id="gzip"> GZIP 压缩</p>
                                     <label>配置文件</label><br>
                                     <a id="gconfig" type="button" class="btn btn-default" style="width: 100%">生成配置</a>
                                     <textarea id="inputconfig" class="form-control" placeholder="配置文件"
@@ -104,6 +105,10 @@
                         status: 3,
                         config: $('#inputconfig')[0].value,
                         cer: $('#tls')[0].value
+                    },
+                    success: function (data) {
+                        alert(JSON.stringify(data))
+                        window.location.pathname = "/site/manage.html";
                     }
                 });
             }
@@ -116,9 +121,6 @@
             "headers": {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Authorization": "Bearer " + userjwt
-            },
-            "data": {
-                name: "*"
             },
             success: function (data) {
                 var dom = ""
