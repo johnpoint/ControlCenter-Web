@@ -61,12 +61,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="inputuser">Email</label>
-                            <input type="email" name="username" class="form-control" id="inputEmail" data-op-id="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputuser">Password</label>
-                            <input type="password" name="pass" class="form-control" id="inputPass" data-op-id="0">
+                            <label for="inputuser">Token</label>
+                            <input type="text" class="form-control" id="tokenInput" data-op-id="0">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -105,7 +101,7 @@
             });
         })
         $("#rmrm").click(function () {
-            $("#rmrm").attr('onclick', "window.open('" + apiaddress + "/web/" + $('#inputEmail')[0].value + "/" + $('#inputPass')[0].value + "/backup')");
+            $("#rmrm").attr('onclick', "window.open('" + apiaddress + "/web/" + $('#tokenInput')[0].value + "/backup')");
             document.getElementById("rmrm").click();
             $('#rmser').modal('hide')
         })
