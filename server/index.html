@@ -100,28 +100,28 @@
                             yr += " yr "
                         }
                         if (time >= (60 * 60 * 24 * 30)) {
-                            mon = time / (60 * 60 * 24 * 30);
-                            mon = parseInt(mon)
-                            time = time - mon * (60 * 60 * 24 * 30)
-                            mon += " mon "
+                            monn = time / (60 * 60 * 24 * 30);
+                            monn = parseInt(monn)
+                            time = time - monn * (60 * 60 * 24 * 30)
+                            mon = monn + " mon "
                         }
                         if (time >= (60 * 60 * 24)) {
-                            day = time / (60 * 60 * 24);
-                            day = parseInt(day)
-                            time = time - day * (60 * 60 * 24)
-                            day += " day "
+                            dayy = time / (60 * 60 * 24);
+                            dayy = parseInt(dayy)
+                            time = time - dayy * (60 * 60 * 24)
+                            day = dayy + " day "
                         }
                         if (time >= (60 * 60)) {
-                            hr = time / (60 * 60);
-                            hr = parseInt(hr)
-                            time = time - hr * (60 * 60)
-                            hr += " hr "
+                            hrr = time / (60 * 60);
+                            hrr = parseInt(hrr)
+                            time = time - hrr * (60 * 60)
+                            hr = hrr + " hr "
                         }
                         if (time >= 60) {
-                            min = time / 60;
-                            min = parseInt(min)
-                            time = time - min * 60
-                            min += " min "
+                            minn = time / 60;
+                            minn = parseInt(minn)
+                            time = time - minn * 60
+                            min = minn + " min "
                         }
                         $('.uptime')[index].innerHTML = "Uptime: " + yr + mon + day + hr + min + time + " s"
                         $('.load')[index].innerHTML = 'Load: ' + statusdata["Load"]["load1"].toFixed(2) + "  " + statusdata["Load"]["load5"].toFixed(2) + "  " + statusdata["Load"]["load15"].toFixed(2)
