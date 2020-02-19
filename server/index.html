@@ -92,38 +92,37 @@
                         } else {
                             $('.panel-index')[index].style.color = "green"
                         }
-                        time = statusdata["Uptime"]
-                        if (time >= (60 * 60 * 24 * 30 * 12)) {
-                            yr = time / (60 * 60 * 24 * 30 * 12);
+                        if (statusdata["Uptime"] >= (60 * 60 * 24 * 30 * 12)) {
+                            yr = statusdata["Uptime"] / (60 * 60 * 24 * 30 * 12);
                             yr = parseInt(yr)
-                            time = time - yr * (60 * 60 * 24 * 30 * 12)
+                            statusdata["Uptime"] -= (yr * (60 * 60 * 24 * 30 * 12))
                             yr += " yr "
                         }
-                        if (time >= (60 * 60 * 24 * 30)) {
-                            monn = time / (60 * 60 * 24 * 30);
-                            monn = parseInt(monn)
-                            time = time - monn * (60 * 60 * 24 * 30)
-                            mon = monn + " mon "
+                        if (statusdata["Uptime"] >= (60 * 60 * 24 * 30)) {
+                            mon = statusdata["Uptime"] / (60 * 60 * 24 * 30);
+                            mon = parseInt(mon)
+                            statusdata["Uptime"] -= (mon * (60 * 60 * 24 * 30))
+                            mon += " mon "
                         }
-                        if (time >= (60 * 60 * 24)) {
-                            dayy = time / (60 * 60 * 24);
-                            dayy = parseInt(dayy)
-                            time = time - dayy * (60 * 60 * 24)
-                            day = dayy + " day "
+                        if (statusdata["Uptime"] >= (60 * 60 * 24)) {
+                            day = statusdata["Uptime"] / (60 * 60 * 24);
+                            day = parseInt(day)
+                            statusdata["Uptime"] -= (day * (60 * 60 * 24))
+                            day += " day "
                         }
-                        if (time >= (60 * 60)) {
-                            hrr = time / (60 * 60);
-                            hrr = parseInt(hrr)
-                            time = time - hrr * (60 * 60)
-                            hr = hrr + " hr "
+                        if (statusdata["Uptime"] >= (60 * 60)) {
+                            hr = statusdata["Uptime"] / (60 * 60);
+                            hr = parseInt(hr)
+                            statusdata["Uptime"] -= (hr * (60 * 60))
+                            hr += " hr "
                         }
-                        if (time >= 60) {
-                            minn = time / 60;
-                            minn = parseInt(minn)
-                            time = time - minn * 60
-                            min = minn + " min "
+                        if (statusdata["Uptime"] >= 60) {
+                            min = statusdata["Uptime"] / 60;
+                            min = parseInt(min)
+                            statusdata["Uptime"] -= (min * 60)
+                            min += " min "
                         }
-                        $('.uptime')[index].innerHTML = "Uptime: " + yr + mon + day + hr + min + time + " s"
+                        $('.uptime')[index].innerHTML = "Uptime: " + yr + mon + day + hr + min + statusdata["Uptime"] + " s"
                         $('.load')[index].innerHTML = 'Load: ' + statusdata["Load"]["load1"].toFixed(2) + "  " + statusdata["Load"]["load5"].toFixed(2) + "  " + statusdata["Load"]["load15"].toFixed(2)
                     }
                 }
