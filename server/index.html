@@ -84,8 +84,8 @@
                     "Authorization": "Bearer " + userjwt
                 },
                 success: function (data) {
-                    var yr = "", mon = "", day = "", hr = "", min = "";
                     for (let index = 0; index < data.length; index++) {
+                        var yr = "", mon = "", day = "", hr = "", min = "";
                         statusdata = JSON.parse(data[index]["status"])
                         if ((Date.parse(new Date()) / 1000) - statusdata["BootTime"] - statusdata["Uptime"] > 5) {
                             $('.panel-index')[index].style.color = "red"
