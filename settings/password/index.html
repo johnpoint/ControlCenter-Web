@@ -35,7 +35,7 @@
             <ul class="nav nav-pills">
                 <li role="presentation"><a href="/settings">Profile</a></li>
                 <li role="presentation" class="active"><a href="/settings/password/">Password</a></li>
-                <li role="presentation"><a href="/settings/backup">Backup</a></li>
+                <li id="databaseBackup" role="presentation"><a href="/settings/backup">Backup</a></li>
                 <li role="presentation"><a href="/settings/token">Token</a></li>
                 <li role="presentation"><a href="/settings/telegram">Notification</a></li>
             </ul>
@@ -66,6 +66,9 @@
     <script src="/js/config.js"></script>
     <script src="/js/checkPower.js"></script>
     <script>
+        if(userlevel!=0){
+            $('#databaseBackup').hide()
+        }
         $('#updatePass').click(function () {
             $.ajax({
                 url: apiaddress + '/web/UserInfo/Password/' + $('#oldpass')[0].value + '/' + $('#newpass')[0].value,

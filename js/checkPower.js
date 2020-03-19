@@ -8,10 +8,10 @@ for (let index = 0; index < c.length; index++) {
         userjwt = c[index][1].replace(' ', '');
     }
 };
-
+var userlevel = 2;
 function checkuser() {
     if (userjwt == "") {
-        if (window.location.pathname != "/login.html") {
+        if (window.location.pathname != "/login.html" && window.location.pathname != "/register.html") {
             window.location.pathname = "/login.html"
         }
     }
@@ -28,6 +28,7 @@ function checkuser() {
                 document.getElementById("nologin_Navbar-Account").style.display = "none";
                 document.getElementById("login_Navbar-Account").style.display = "";
                 $('#username')[0].innerHTML = data["name"] + '  <b class="caret"></b>'
+                userlevel = data["level"]
             }
         }
     })

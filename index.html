@@ -117,7 +117,7 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-8 col-xs-8">
-                                        <h1 id="lenservice">loading</h1>
+                                        <h1 id="lenservice">0</h1>
                                         <p>Service</p>
                                     </div>
                                     <div class="col-md-4 col-xs-4">
@@ -149,6 +149,7 @@
                 "Authorization": "Bearer " + userjwt
             },
             success: function (data) {
+                $('#lencer')[0].innerHTML = 0
                 $('#lencer')[0].innerHTML = data.length
             }
         });
@@ -161,6 +162,7 @@
                 "Authorization": "Bearer " + userjwt
             },
             success: function (data) {
+                $('#lensite')[0].innerHTML = 0
                 $('#lensite')[0].innerHTML = data.length
             },
             error: function () {
@@ -177,6 +179,7 @@
                 "Authorization": "Bearer " + userjwt
             },
             success: function (data) {
+                $('#lenserver')[0].innerText = 0
                 $('#lenserver')[0].innerText = data.length
             },
             error: function () {

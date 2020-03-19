@@ -155,6 +155,32 @@
                     <div class="panel-body">
                         <div class="container">
                             <div class="row">
+                                <div class="col-md-10">
+                                    <label>network interface info</label>
+                                    <hr>
+                                    <select id="net">
+                                        <option value=-1>--select--</option>
+                                    </select>
+                                    <button class="btn btn-info showbtn"
+                                        onclick="$('.cardinfo').show();$('.showbtn').hide();$('.hidebtn').show()">show
+                                        all</button>
+                                    <button class="btn btn-danger hidebtn" style="display: none;"
+                                        onclick="$('.cardinfo').hide();$('.showbtn').show();$('.hidebtn').hide()">hide
+                                        all</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10" id="netcardinfo"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div style="margin-bottom:5px" class="panel panel-default panel-index">
+                    <div class="panel-body">
+                        <div class="container">
+                            <div class="row">
                                 <a type="button" class="btn btn-default" data-toggle="modal" data-target="#siteman"
                                     onclick="loadsitelist()">Site Manager</a>
                                 <a type="button" class="btn btn-info" data-toggle="modal" data-target="#cerman"
@@ -242,6 +268,7 @@
         for (index = 0; index <= 1100; index += 20) {
             time.push(index);
         }
+
         $('#rmrm').click(function () {
             $.ajax({
                 "url": apiaddress + "/web/Server/" + window.location.search.replace("?ip=", ''),
@@ -279,6 +306,21 @@
                     }
                     $('#hostname')[0].innerHTML = data[0]["hostname"]
                     $('#cpuinfo')[0].innerHTML = statusdata["CPU"][0].ModelName + ' * ' + statusdata["CPU"].length
+                    nettext = "<option value=-1>--select--</option>"
+                    infotext = ""
+                    for (var key in statusdata["Network"]) {
+                        nettext += "<option value='" + key + "'>" + key + "</option>"
+                        addr = ""
+                        for (var i = 0; i < statusdata["Network"][key]["Addrs"].length; i++) {
+                            addr += statusdata["Network"][key]["Addrs"][i] + "<br>"
+                        }
+                        indata = parseInt(statusdata["Network"][key]["ByteRecv"] / 1048576)
+                        outdata = parseInt(statusdata["Network"][key]["ByteSent"] / 1048576)
+
+                        infotext += '<div id="info_' + key + '" style="display: none;" class="panel panel-default cardinfo"><div class="panel-body"><div class="container"><label>' + key + '</label><br><label>Addr</label><p>' + addr + '</p><label>Network traffic</label><p>IN: ' + indata + ' MB</p><p>OUT: ' + outdata + ' MB</p></div></div></div>'
+                    }
+                    $("#netcardinfo")[0].innerHTML = infotext
+                    $("#net")[0].innerHTML = nettext
                 },
                 error: function () {
                     $('#error')[0].innerHTML = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span></button ><strong>Warning!</strong> 服务器连接失败!</div > '
@@ -375,7 +417,11 @@
             })
         }
         update()
-
+        $("#net").change(function () {
+            $(".cardinfo").hide()
+            name = "#info_" + $("#net")[0].value
+            $(name).show()
+        })
         const timeId = setInterval(() => {
             if (true) {
                 clearInterval(this.timeId)

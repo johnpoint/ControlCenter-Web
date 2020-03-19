@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <title>Login-ControlCenter</title>
+    <title>Register-ControlCenter</title>
 </head>
 
 
@@ -37,7 +37,7 @@
                 <div class="col-md-6 col-md-offset-3 main-content">
                     <div class="logincontainer">
                         <div class="header-lined">
-                            <h1>登入 <small>请使用您的账户登入</small></h1>
+                            <h1>注册 <small>注册一个新的帐号</small></h1>
                         </div>
                         <div class="providerLinkingFeedback"></div>
 
@@ -46,28 +46,44 @@
 
                                 <form method="post" action="https://my.bootvm.com/dologin.php" class="login-form"
                                     role="form" data-op-form-id="0">
-                                    <input type="hidden" name="token" value="ae1665febf501fa432f3fcc3323436795c33d8e3">
+                                    <div class="form-group">
+                                        <label for="inputUsername">Username 用户名</label>
+                                        <input type="text" class="form-control" id="inputUsername" placeholder="輸入 用户名"
+                                            autofocus="" data-op-id="0">
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="inputEmail">Email 地址</label>
-                                        <input type="email" name="username" class="form-control" id="inputEmail"
-                                            placeholder="輸入 email" autofocus="" data-op-id="0">
+                                        <input type="email" class="form-control" id="inputEmail" placeholder="輸入 email"
+                                            autofocus="" data-op-id="0">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="inputPassword">密码</label>
                                         <input type="password" name="password" class="form-control" id="inputPassword"
-                                            placeholder="密碼" autocomplete="off">
+                                            placeholder="密碼">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputPassword">确认密码</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control"
+                                                id="inputPassword2" placeholder="再输入一次密碼">
+                                            <span class="input-group-addon">False</span>
+                                        </div>
+
+
                                     </div>
 
                                     <div class="checkbox">
                                         <label>
-                                            <small><a href="/register.html">没有帐号?注册</a></small>
+                                            <small><a href="/login.html">已经有帐号?登录</a></small>
                                         </label>
                                     </div>
                                     <div class="text-center margin-bottom">
                                     </div>
                                     <div align="center">
-                                        <a id="loginbtn" type="button" class="btn btn-default">登入</a>
+                                        <a id="registerBtn" type="button" class="btn btn-default">注册</a>
                                     </div>
                                 </form>
 
