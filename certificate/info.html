@@ -153,15 +153,12 @@
 
         $('#rmrm').click(function () {
             $.ajax({
-                "url": apiaddress + "/web/Certificate",
+                "url": apiaddress + "/web/Certificate/"+window.location.search.replace('?id=', ''),
                 "method": "DELETE",
                 "timeout": 0,
                 "headers": {
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
-                },
-                "data": {
-                    id: window.location.search.replace('?id=', '')
                 },
                 success: function () {
                     window.location.pathname = "/certificate/"
