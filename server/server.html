@@ -271,7 +271,7 @@
 
         $('#rmrm').click(function () {
             $.ajax({
-                "url": apiaddress + "/web/Server/" + window.location.search.replace("?ip=", ''),
+                "url": apiaddress + "/web/Server/" + window.location.search.replace("?id=", ''),
                 "method": "DELETE",
                 "timeout": 0,
                 "headers": {
@@ -292,7 +292,7 @@
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 },
-                data: { ipv4: window.location.search.replace('?ip=', '') },
+                data: { id: window.location.search.replace('?id=', '') },
                 success: function (data) {
                     var dom = ""
                     var dom2 = ""
@@ -338,7 +338,7 @@
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 },
-                data: { ipv4: window.location.search.replace('?ip=', '') },
+                data: { id: window.location.search.replace('?id=', '') },
                 success: function (data) {
                     var dom = ""
                     var statusdata = JSON.parse(data[0]["status"])
@@ -469,7 +469,7 @@
                             "Content-Type": "application/x-www-form-urlencoded",
                             "Authorization": "Bearer " + userjwt
                         },
-                        data: { ipv4: window.location.search.replace('?ip=', '') },
+                        data: { id: window.location.search.replace('?id=', '') },
                         success: function (data) {
                             for (let index = 0; index < data.length; index++) {
                                 $('#' + data[index].SiteID + 'adds').hide();
@@ -514,7 +514,7 @@
                             "Content-Type": "application/x-www-form-urlencoded",
                             "Authorization": "Bearer " + userjwt
                         },
-                        data: { ipv4: window.location.search.replace('?ip=', '') },
+                        data: { id: window.location.search.replace('?id=', '') },
                         success: function (data) {
                             for (let index = 0; index < data.length; index++) {
                                 $('#' + data[index].CertificateID + 'add').hide();
@@ -542,7 +542,7 @@
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 },
-                data: { ipv4: window.location.search.replace('?ip=', '') },
+                data: { id: window.location.search.replace('?id=', '') },
                 success: function (data) {
                     var serverid = data[0]["ID"]
                     $.ajax({
@@ -582,7 +582,7 @@
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 },
-                data: { ipv4: window.location.search.replace('?ip=', '') },
+                data: { id: window.location.search.replace('?id=', '') },
                 success: function (data) {
                     var serverid = data[0]["ID"]
                     $.ajax({
