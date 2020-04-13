@@ -31,10 +31,25 @@
         <div class="container">
             <div id="error"></div>
             <div class="page-header">
-                <h1>Server <small>Overview</small></h1>
+                <h1>Server <small><a data-toggle="modal" data-target="#newserver">+1</a></small></h1>
             </div>
             <div id="serverinfo">
                 <p>Loading...</p>
+            </div>
+        </div>
+        <div class="modal fade" id="newserver" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Tips</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label>Command</label><br />
+                        <code id="installCode"></code>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -148,6 +163,19 @@
         function clearCookie(name) {
             setCookie(name, "", -1);
         }
+        $.ajax({
+            "url": apiaddress + "/web/UserInfo/Token",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": "Bearer " + userjwt
+            },
+            success: function (data) {
+                $('#installCode')[0].innerHTML = "./Client install " + apiaddress + " Server-name `curl ip.sb -4` `curl ip.sb` " + data.Info
+            }
+        });
+
     </script>
 
 </body>
