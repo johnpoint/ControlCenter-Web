@@ -59,11 +59,8 @@
         $("#menu").load('/_partial/settings/menu.html')
     </script>
     <script src="/js/config.js"></script>
-    <script src="/js/checkPower.js">
-        if (userlevel != 0) {
-            $('#databaseBackup').hide()
-        }
-    </script>
+    <script src="/source/js/config.js"></script>
+    <script src="/source/js/checkPower.js"></script>
     <script>
         $('#updatePass').click(function () {
             $.ajax({
