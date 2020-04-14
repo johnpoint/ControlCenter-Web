@@ -34,3 +34,7 @@ section#main-body {
 .panel-index:hover {
     border-color: rgba(0, 0, 0, 0.9)
 }
+
+.nav-pills {
+    height: 40px;
+}

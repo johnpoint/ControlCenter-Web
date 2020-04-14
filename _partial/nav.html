@@ -31,14 +31,6 @@
                         Certificate
                     </a>
                 </li>
-                <!--<li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                            aria-expanded="false">Service <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/service/add.html">Add Service</a></li>
-                            <li><a href="/service/manage.html">Service Manage</a></li>
-                        </ul>
-                    </li>-->
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -47,7 +39,7 @@
                         账户
                         &nbsp;<b class="caret"></b> </a>
                     <ul class="dropdown-menu">
-                        <li menuitemname="Login" id="Secondary_Navbar-Account-Login">
+                        <li menuitemname="Login">
                             <a href="/login.html">
                                 Login
                             </a>
@@ -58,14 +50,18 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false" id="username"><b
                             class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li menuitemname="Login" id="Secondary_Navbar-Account-Login">
+                        <li menuitemname="Login">
                             <a href="/settings">
                                 Settings
                             </a>
                         </li>
+                        <li menuitemname="Login">
+                            <a href="/console">
+                                System Console
+                            </a>
+                        </li>
                         <li role="separator" class="divider"></li>
-                        <li menuitemname="Login" id="Secondary_Navbar-Account-Login"
-                            onclick="document.location.href='/?logout'">
+                        <li menuitemname="Login" onclick="document.location.href='/?logout'">
                             <a id="logout">
                                 Log out
                             </a>

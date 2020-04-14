@@ -32,13 +32,7 @@
             <div class="page-header">
                 <h1>Settings <small>Overview</small></h1>
             </div>
-            <ul class="nav nav-pills">
-                <li role="presentation" class="active"><a href="/settings">Profile</a></li>
-                <li role="presentation"><a href="/settings/password/">Password</a></li>
-                <li id="databaseBackup" role="presentation"><a href="/settings/backup">Backup</a></li>
-                <li role="presentation"><a href="/settings/token">Token</a></li>
-                <li role="presentation"><a href="/settings/telegram">Notification</a></li>
-            </ul>
+            <ul class="nav nav-pills" id="menu"></ul>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>Username</p>
@@ -68,8 +62,9 @@
     </section>
     <section id="footer"></section>
     <script>
-        $("#nav").load('/part/nav.html');
-        $("#footer").load('/part/footer.html');
+        $("#nav").load('/_partial/nav.html');
+        $("#footer").load('/_partial/footer.html');
+        $("#menu").load('/_partial/settings/menu.html')
     </script>
     <script src="/js/config.js"></script>
     <script src="/js/checkPower.js">
