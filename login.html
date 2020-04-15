@@ -106,6 +106,9 @@
                     "password": $('#inputPassword')[0].value
                 },
                 success: function (data) {
+                    if (data["Info"] != null) {
+                        alert(data["Info"])
+                    }
                     if (data["token"] != null) {
                         document.cookie = "jwt=" + data["token"]
                         window.location.pathname = "/"

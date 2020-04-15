@@ -30,15 +30,9 @@
         <div class="container">
             <div id="error"></div>
             <div class="page-header">
-                <h1>Settings <small>Overview</small></h1>
+                <h1>System Console</h1>
             </div>
-            <ul class="nav nav-pills">
-                <li role="presentation"><a href="/settings">Profile</a></li>
-                <li role="presentation"><a href="/settings/password/">Password</a></li>
-                <li role="presentation" class="active"><a href="/settings/backup">Backup</a></li>
-                <li role="presentation"><a href="/settings/token">Token</a></li>
-                <li role="presentation"><a href="/settings/telegram">Notification</a></li>
-            </ul>
+            <ul class="nav nav-pills" id="menu"></ul>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>Download Database</p>
@@ -78,6 +72,7 @@
     <script>
         $("#nav").load('/_partial/nav.html');
         $("#footer").load('/_partial/footer.html');
+        $("#menu").load('/_partial/console/menu.html')
     </script>
     <script src="/source/js/config.js"></script>
     <script src="/source/js/checkPower.js"></script>

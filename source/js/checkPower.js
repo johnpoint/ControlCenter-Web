@@ -29,6 +29,15 @@ function checkuser() {
                 document.getElementById("login_Navbar-Account").style.display = "";
                 $('#username')[0].innerHTML = data["name"] + '  <b class="caret"></b>'
                 userlevel = data["level"]
+                if (userlevel <= 0) {
+                    $('#console').show();
+                }
+            }
+        },
+        error: function () {
+            if (window.location.pathname != "/login.html" && window.location.pathname != "/register.html") {
+                alert("您的权限被改变，请重新登录")
+                window.location.pathname = "/login.html"
             }
         }
     })

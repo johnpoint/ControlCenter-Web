@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/source/css/bootstrap.min.css">
     <link rel="stylesheet" href="/source/css/custom.css">
     <link rel="stylesheet" href="/source/css/all.min.css">
+    <link rel="stylesheet" href="/source/css/iconfont.css">
+    <script src="//at.alicdn.com/t/font_1756377_vjvdjtl1kun.js"></script>
     <link rel="shortcut icon" href="/favicon.ico">
     <script src="/source/js/jquery-3.4.1.min.js"></script>
     <script src="/source/js/bootstrap.min.js"></script>
@@ -32,16 +34,9 @@
             <div class="page-header">
                 <h1>System Console</h1>
             </div>
-            <ul class="nav nav-pills">
-                <li role="presentation" class="active"><a href="/settings">Profile</a></li>
-                <li role="presentation"><a href="/settings/password/">Password</a></li>
-                <li id="databaseBackup" role="presentation"><a href="/settings/backup">Backup</a></li>
-                <li role="presentation"><a href="/settings/token">Token</a></li>
-                <li role="presentation"><a href="/settings/telegram">Notification</a></li>
-            </ul>
+            <ul class="nav nav-pills" id="menu"></ul>
             <div class="panel panel-default">
-                <div class="panel-body">
-                    
+                <div class="panel-body" id="showUser">
                 </div>
             </div>
         </div>
@@ -50,9 +45,62 @@
     <script>
         $("#nav").load('/_partial/nav.html');
         $("#footer").load('/_partial/footer.html');
+        $("#menu").load('/_partial/console/menu.html');
     </script>
     <script src="/source/js/config.js"></script>
     <script src="/source/js/checkPower.js"></script>
+    <script>
+        function getUserInfo() {
+            $.ajax({
+                url: apiaddress + "/web/UserInfo/",
+                headers: {
+                    "Authorization": "Bearer " + userjwt
+                },
+                success: function (data) {
+                    console.log(data);
+                    var html = "";
+                    data.forEach(element => {
+                        html += '<div class="panel panel-default"><div class="panel-body">'
+                        if (element["Level"] <= 0) {
+                            html += '<svg class="icon" aria-hidden="true"><use xlink:href="#icon-guanliyuan"></use></svg> ';
+                        } else {
+                            html += '<svg class="icon" aria-hidden="true"><use xlink:href="#icon-yonghu"></use></svg> ';
+                        }
+                        html += element["name"] + " | <label title='" + element["email"] + "'>Email</label><br />";
+                        if (element["Level"] < 0) {
+                            html += '<label style="color:brown" onclick="setAdmin(' + element["ID"] + ',1)">Cancel administrator rights</label>';
+                        }
+                        if (element["Level"] > 0) {
+                            html += '<label style="color:darkgray" onclick="setAdmin(' + element["ID"] + ',-1)">Set as administrator</label>'
+                        }
+                        if (element["Level"] == 0) {
+                            html += '<label style="color:green">System Super Administrator</label>'
+                        }
+                        html += ' | <label style="color:red" onclick="delUser(' + element["ID"] + ')">Delete</label></div></div>';
+                    });
+                    $('#showUser')[0].innerHTML = html;
+                }
+            })
+        }
+        getUserInfo();
+        function setAdmin(id, level) {
+            console.log(id);
+            $.ajax({
+                url: apiaddress + "/web/UserInfo/level/" + id + "/" + level,
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + userjwt
+                },
+                success: function (data) {
+                    console.log(data)
+                    getUserInfo();
+                },
+                error: function () {
+                    checkuser();
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>
