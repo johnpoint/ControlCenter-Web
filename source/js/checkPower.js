@@ -36,7 +36,7 @@ function checkuser() {
         },
         error: function () {
             if (window.location.pathname != "/login.html" && window.location.pathname != "/register.html") {
-                alert("您的权限被改变，请重新登录")
+                alert("登录状态已过期，请重新登录")
                 window.location.pathname = "/login.html"
             }
         }

@@ -185,6 +185,8 @@
                                     onclick="loadsitelist()">Site Manager</a>
                                 <a type="button" class="btn btn-info" data-toggle="modal" data-target="#cerman"
                                     onclick="loadcerlist()">Certificate Manager</a>
+                                <a type="button" class="btn btn-success" data-toggle="modal"
+                                    data-target="#dockerman">Docker Manager</a>
                                 <a type="button" class="btn btn-danger" data-toggle="modal"
                                     data-target="#rmser">Detele</a>
                             </div>
@@ -222,6 +224,24 @@
                     <div class="modal-body">
                         <p id="ld">Loading...</p>
                         <div id="cerlist">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="dockerman" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Docker Manager</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="dockerlist">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -321,6 +341,12 @@
                     }
                     $("#netcardinfo")[0].innerHTML = infotext
                     $("#net")[0].innerHTML = nettext
+                    dockerlist = ""
+                    statusdata['DockerInfo'].forEach(docker => {
+                        dockerlist += '<div class="panel panel-default"><div class="panel-body">ID: ' + docker['ID'] + '<br />Image: ' + docker['Image'] +
+                            '<br />' + docker['Port'] + '<br />Status: ' + docker['State'] + '</div></div>'
+                    });
+                    $('#dockerlist')[0].innerHTML = dockerlist
                 },
                 error: function () {
                     $('#error')[0].innerHTML = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span></button ><strong>Warning!</strong> 服务器连接失败!</div > '
