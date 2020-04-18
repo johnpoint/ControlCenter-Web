@@ -343,8 +343,8 @@
                     $("#net")[0].innerHTML = nettext
                     dockerlist = ""
                     statusdata['DockerInfo'].forEach(docker => {
-                        dockerlist += '<div class="panel panel-default"><div class="panel-body">ID: ' + docker['ID'] + '<br />Image: ' + docker['Image'] +
-                            '<br />' + docker['Port'] + '<br />Status: ' + docker['State'] + '</div></div>'
+                        dockerlist += '<div class="panel panel-default"><div class="panel-body"><label>ID: </label>' + docker['ID'] + '<br /><label>Image: </label>' + docker['Image'] +
+                            '<br />' + docker['Port'] + '<br /><label>Status: </label>' + docker['State'] + '</div></div>'
                     });
                     $('#dockerlist')[0].innerHTML = dockerlist
                 },
