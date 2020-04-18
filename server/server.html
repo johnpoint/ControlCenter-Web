@@ -40,6 +40,24 @@
                         <div class="panel-body">
                             <div class="container">
                                 <div class="row">
+                                    <a type="button" class="btn btn-default" data-toggle="modal" data-target="#siteman"
+                                        onclick="loadsitelist()">Site Manager</a>
+                                    <a type="button" class="btn btn-info" data-toggle="modal" data-target="#cerman"
+                                        onclick="loadcerlist()">Certificate Manager</a>
+                                    <a type="button" class="btn btn-success" data-toggle="modal"
+                                        data-target="#dockerman">Docker Manager</a>
+                                    <a type="button" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#rmser">Detele</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="margin-bottom:5px" class="panel panel-default panel-index">
+                        <div class="panel-body">
+                            <div class="container">
+                                <div class="row">
                                     <div class="col-md-2">IP</div>
                                     <div class="col-md-4" id="ipv4">loading</div>
                                     <div class="col-md-4" id="ipv6">loading</div>
@@ -171,24 +189,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-10" id="netcardinfo"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div style="margin-bottom:5px" class="panel panel-default panel-index">
-                    <div class="panel-body">
-                        <div class="container">
-                            <div class="row">
-                                <a type="button" class="btn btn-default" data-toggle="modal" data-target="#siteman"
-                                    onclick="loadsitelist()">Site Manager</a>
-                                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#cerman"
-                                    onclick="loadcerlist()">Certificate Manager</a>
-                                <a type="button" class="btn btn-success" data-toggle="modal"
-                                    data-target="#dockerman">Docker Manager</a>
-                                <a type="button" class="btn btn-danger" data-toggle="modal"
-                                    data-target="#rmser">Detele</a>
                             </div>
                         </div>
                     </div>
