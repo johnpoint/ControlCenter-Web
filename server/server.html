@@ -368,7 +368,7 @@
                 success: function (data) {
                     var dom = ""
                     var statusdata = JSON.parse(data[0]["status"])
-                    if ((Date.parse(new Date()) / 1000) - statusdata["BootTime"] - statusdata["Uptime"] > 30) {
+                    if ((Date.parse(new Date()) / 1000) - statusdata["BootTime"] - statusdata["Uptime"] > 15) {
                         document.getElementsByClassName("progress-bar")[0].className = "progress-bar progress-bar-danger"
                         document.getElementsByClassName("progress-bar")[1].className = "progress-bar progress-bar-danger"
                         document.getElementsByClassName("progress-bar")[2].className = "progress-bar progress-bar-danger"
