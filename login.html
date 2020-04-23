@@ -107,7 +107,8 @@
                 },
                 success: function (data) {
                     if (data["Info"] != null) {
-                        alert(data["Info"])
+                        $('#errorText')[0].innerText = data["Info"]
+                        $('#errorMsg').modal('show')
                     }
                     if (data["token"] != null) {
                         document.cookie = "jwt=" + data["token"]
@@ -115,13 +116,8 @@
                     }
                 },
                 error: function (data) {
-                    if (data["Info"] != null) {
-                        $('#errorText')[0].innerText = data["Info"]
-                        $('#errorMsg').modal('show')
-                    } else {
                         $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
                         $('#errorMsg').modal('show')
-                    }
                 }
             })
         })
