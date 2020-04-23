@@ -46,8 +46,8 @@
                                         onclick="loadcerlist()">Certificate Manager</a>
                                     <a type="button" class="btn btn-default" data-toggle="modal"
                                         data-target="#dockerman">Docker Manager</a>
-                                    <a type="button" class="btn btn-default" data-toggle="modal"
-                                        data-target="#updateclient">Update Client</a>
+                                    <a type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#actionpanel">Action</a>
                                     <a type="button" class="btn btn-danger" data-toggle="modal"
                                         data-target="#rmser">Detele</a>
                                 </div>
@@ -227,7 +227,36 @@
                         a period of time, and may even need to be manually turned on to stop monitoring</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" id="updateconfirm" data-dismiss="modal" class="btn btn-danger">Yes</button>
+                        <button type="button" id="updateconfirm" data-dismiss="modal"
+                            class="btn btn-danger">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="actionpanel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Action Panel</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="container">
+                                <div class="row">
+                                    <a type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#updateclient">Upgrade Client</a>
+                                    <a type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#stopclient">Stop Client</a>
+                                    <a type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#syncdata">Sync Data</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
