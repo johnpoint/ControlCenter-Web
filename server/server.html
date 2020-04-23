@@ -247,7 +247,7 @@
                                         data-target="#updateclient" onclick="$('#actionpanel').modal('hide')">Upgrade
                                         Client</a>
                                     <a type="button" class="btn btn-default" data-toggle="modal"
-                                        data-target="#stopclient" onclick="$('#actionpanel').modal('hide')">Stop
+                                        data-target="#stopclient" id="stopbtn" onclick="$('#actionpanel').modal('hide')">Stop
                                         Client</a>
                                     <a type="button" class="btn btn-default" id="syncbtn"
                                         onclick="$('#actionpanel').modal('hide')">Sync Data</a>
@@ -359,6 +359,21 @@
                 "data": {
                     "id": window.location.search.replace("?id=", ''),
                     "update": 3
+                },
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": "Bearer " + userjwt
+                }
+            })
+        })
+
+        $('#stopbtn').click(function () {
+            $.ajax({
+                "url": apiaddress + "/web/ServerInfo",
+                "method": "PUT",
+                "data": {
+                    "id": window.location.search.replace("?id=", ''),
+                    "update": 2
                 },
                 "headers": {
                     "Content-Type": "application/x-www-form-urlencoded",
