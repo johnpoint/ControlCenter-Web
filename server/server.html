@@ -440,7 +440,7 @@
                     $("#netcardinfo")[0].innerHTML = infotext
                     $("#net")[0].innerHTML = nettext
                     dockerlist = ""
-                    if (statusdata["DockerInfo"].length != 0) {
+                    if (statusdata['DockerInfo'] != null) {
                         statusdata['DockerInfo'].forEach(docker => {
                             dockerlist += '<div class="panel panel-default"><div class="panel-body"><label>ID: </label>' + docker['ID'] + '<br /><label>Image: </label>' + docker['Image'] +
                                 '<br />' + docker['Port'] + '<br /><label>Status: </label>' + docker['State'] + '</div></div>'
