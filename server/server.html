@@ -401,6 +401,7 @@
                 }
             })
         })
+        var netdata = {};
         function getinfo() {
             $.ajax({
                 "url": apiaddress + "/web/ServerInfo",
@@ -426,6 +427,7 @@
                     $('#cpuinfo')[0].innerHTML = statusdata["CPU"][0].ModelName + ' * ' + statusdata["CPU"].length
                     nettext = "<option value=-1>--select--</option>"
                     infotext = ""
+
                     for (var key in statusdata["Network"]) {
                         nettext += "<option value='" + key + "'>" + key + "</option>"
                         addr = ""
@@ -434,8 +436,11 @@
                         }
                         indata = parseInt(statusdata["Network"][key]["ByteRecv"] / 1048576)
                         outdata = parseInt(statusdata["Network"][key]["ByteSent"] / 1048576)
-
-                        infotext += '<div id="info_' + key + '" style="display: none;" class="panel panel-default cardinfo"><div class="panel-body"><div class="container"><label>' + key + '</label><br><label>Addr</label><p>' + addr + '</p><label>Network traffic</label><p>IN: ' + indata + ' MB</p><p>OUT: ' + outdata + ' MB</p></div></div></div>'
+                        netdata["in" + key] = indata;
+                        netdata["out" + key] = outdata;
+                        infotext += '<div id="info_' + key + '" style="display: none;" class="panel panel-default cardinfo"><div class="panel-body"> \
+                        <div class="container"><label>' + key + '</label><br><label>Addr</label><p>' + addr + '</p><label>Network traffic</label> \
+                        <p>IN: ' + indata + ' MB | <small id="speedin_' + key + '">MB/s</small></p><p>OUT: ' + outdata + ' MB | <small id="speedout_' + key + '">MB/s</small></p></div></div></div>'
                     }
                     $("#netcardinfo")[0].innerHTML = infotext
                     $("#net")[0].innerHTML = nettext
@@ -482,6 +487,8 @@
                         $('#cpu')[0].innerHTML = ""
                         $('#disk')[0].style.width = 100 + '%'
                         $('#disk')[0].innerHTML = ""
+                        $("#netcardinfo")[0].innerHTML = ""
+                        $("#net")[0].innerHTML = ""
                     } else {
                         document.getElementsByClassName("progress-bar")[0].className = "progress-bar progress-bar-info"
                         document.getElementsByClassName("progress-bar")[1].className = "progress-bar progress-bar-info"
@@ -500,8 +507,14 @@
                         var keyl = []
                         var i = 0
                         for (var key in statusdata["Network"]) {
-                            keyl[i] = key;
-                            i++
+                            indata = parseInt(statusdata["Network"][key]["ByteRecv"] / 1048576)
+                            indataperS = (indata - netdata["in" + key]) / 3;
+                            outdata = parseInt(statusdata["Network"][key]["ByteSent"] / 1048576)
+                            outdataperS = (outdata - netdata["out" + key]) / 3;
+                            netdata["in" + key] = indata;
+                            netdata["out" + key] = outdata;
+                            $("#speedin_" + key)[0].innerHTML = indataperS.toFixed(2) + " MB/s";
+                            $("#speedout_" + key)[0].innerHTML = outdataperS.toFixed(2) + " MB/s";
                         }
                         if (memp.length >= 38) {
                             for (let index = 0; index < memp.length - 1; index++) {
