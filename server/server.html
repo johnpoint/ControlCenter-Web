@@ -439,8 +439,8 @@
                         netdata["in" + key] = indata;
                         netdata["out" + key] = outdata;
                         infotext += '<div id="info_' + key + '" style="display: none;" class="panel panel-default cardinfo"><div class="panel-body"> \
-                        <div class="container"><label>' + key + '</label><br><label>Addr</label><p>' + addr + '</p><label>Network traffic</label> \
-                        <p>IN: ' + indata + ' MB | <small id="speedin_' + key + '">MB/s</small></p><p>OUT: ' + outdata + ' MB | <small id="speedout_' + key + '">MB/s</small></p></div></div></div>'
+                        <div class="container"><label>' + key + '</label><br><text id="speedin_' + key + '">↓ 0 MB/s</text> | <text id="speedout_' + key + '">↑ 0 MB/s</text>\
+                            <br><br><p>' + addr + '</p></div></div></div>'
                     }
                     $("#netcardinfo")[0].innerHTML = infotext
                     $("#net")[0].innerHTML = nettext
@@ -512,9 +512,19 @@
                             outdata = parseInt(statusdata["Network"][key]["ByteSent"] / 1048576)
                             outdataperS = (outdata - netdata["out" + key]) / 3;
                             netdata["in" + key] = indata;
+                            if (indataperS != 0) {
+                                $("#speedin_" + key).css("color", "green")
+                            } else {
+                                $("#speedin_" + key).css("color", "black")
+                            }
+                            if (outdataperS != 0) {
+                                $("#speedout_" + key).css("color", "green")
+                            } else {
+                                $("#speedout_" + key).css("color", "black")
+                            }
                             netdata["out" + key] = outdata;
-                            $("#speedin_" + key)[0].innerHTML = indataperS.toFixed(2) + " MB/s";
-                            $("#speedout_" + key)[0].innerHTML = outdataperS.toFixed(2) + " MB/s";
+                            $("#speedin_" + key)[0].innerText = "↓ " + indataperS.toFixed(2) + " MB/s";
+                            $("#speedout_" + key)[0].innerText = "↑ " + outdataperS.toFixed(2) + " MB/s";
                         }
                         if (memp.length >= 38) {
                             for (let index = 0; index < memp.length - 1; index++) {
