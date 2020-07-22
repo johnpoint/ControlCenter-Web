@@ -13,6 +13,7 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <script src="/source/js/jquery-3.4.1.min.js"></script>
     <script src="/source/js/bootstrap.min.js"></script>
+    <script src="/source/js/echarts.min.js"></script>
     <title>Server-ControlCenter</title>
 </head>
 
@@ -106,16 +107,8 @@
                                                 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
-                                    <div class="col-md-10">
-                                        <div style="margin-bottom:5px" class="panel panel-default panel-index">
-                                            <div class="panel-body">
-                                                <svg version="1.1" style="width: 100%;">
-                                                    <!--x(0,1100)y(0,200)-->
-                                                    <polyline points="0,200"
-                                                        style="fill:rgba(157, 150, 255, 0.48);stroke:#68f;stroke-width:2;" />
-                                                </svg>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-12">
+                                        <div id="memimg" style="width: 100%; height: 250px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -138,15 +131,9 @@
                                 <div class="col-md-10">
                                     <div id="cpuinfo">
                                     </div>
-                                    <div style="margin-bottom:5px" class="panel panel-default panel-index">
-                                        <div class="panel-body">
-                                            <svg version="1.1" style="width: 100%;">
-                                                <!--x(0,1100)y(0,200)-->
-                                                <polyline points="0,200"
-                                                    style="fill:rgba(157, 150, 255, 0.48);stroke:#68f;stroke-width:2;" />
-                                            </svg>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div id="cpuimg" style="width: 100%; height: 250px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -323,6 +310,7 @@
             </div>
         </div>
     </section>
+    <div id="cpuimg1"></div>
     <section id="footer"></section>
     <script>
         $("#nav").load('/_partial/nav.html');
@@ -333,14 +321,33 @@
     <script>
         var cpup = [];
         var memp = [];
-        var time = [];
-        var point = $('polyline')[0].points[0];
-        var nulllist = $('polyline')[0].points
-        point.x = 0;
-        point.y = 0;
-        for (index = 0; index <= 1100; index += 20) {
-            time.push(index);
-        }
+        var cpuimg = echarts.init(document.getElementById('cpuimg'));
+        var memimg = echarts.init(document.getElementById('memimg'));
+        var num = Array.from(new Array(30).keys());
+        var option = {
+            xAxis: {
+                data: num,
+                type: 'category',
+                boundaryGap: false,
+                show: false
+            },
+            yAxis: {
+                type: 'value',
+                showSymbol: false,
+                hoverAnimation: false
+            },
+            series: [{
+                type: 'line',
+                itemStyle: {
+                    color: 'rgb(255, 70, 131)'
+                },
+                areaStyle: {
+                    color: '#5bc0de'
+                },
+            }]
+        };
+        cpuimg.setOption(option);
+        memimg.setOption(option);
 
         $('#updateconfirm').click(function () {
             $.ajax({
@@ -497,10 +504,10 @@
                         $('#load5')[0].innerHTML = statusdata["Load"]["load5"].toFixed(2)
                         $('#load15')[0].innerHTML = statusdata["Load"]["load15"].toFixed(2)
                         $('#mem')[0].style.width = statusdata["Percent"]["Mem"] + '%'
-                        memp.push(statusdata["Percent"]["Mem"] * 1.5)
+                        memp.push(statusdata["Percent"]["Mem"].toFixed(2))
                         $('#mem')[0].innerHTML = parseInt(statusdata["Percent"]["Mem"]) + '%'
                         $('#cpu')[0].style.width = statusdata["Percent"]["CPU"] + '%'
-                        cpup.push(statusdata["Percent"]["CPU"] * 1.5)
+                        cpup.push(statusdata["Percent"]["CPU"].toFixed(2))
                         $('#cpu')[0].innerHTML = parseInt(statusdata["Percent"]["CPU"]) + '%'
                         $('#disk')[0].style.width = statusdata["Percent"]["Disk"] + '%'
                         $('#disk')[0].innerHTML = parseInt(statusdata["Percent"]["Disk"]) + '%'
@@ -526,7 +533,42 @@
                             $("#speedin_" + key)[0].innerText = "↓ " + indataperS.toFixed(2) + " MB/s";
                             $("#speedout_" + key)[0].innerText = "↑ " + outdataperS.toFixed(2) + " MB/s";
                         }
-                        if (memp.length >= 38) {
+                        if (cpup.length > 30) {
+                            num.push(num[num.length - 1] + 1)
+                            num.shift();
+                            cpup.shift();
+                            mem.shift();
+                            cpuimg.setOption({
+                                xAxis: {
+                                    data: num
+                                },
+                                series: [{
+                                    data: cpup
+                                }]
+                            });
+                            memimg.setOption({
+                                xAxis: {
+                                    data: num
+                                },
+                                series: [{
+                                    data: memp
+                                }]
+                            });
+
+
+                        } else {
+                            cpuimg.setOption({
+                                series: [{
+                                    data: cpup
+                                }]
+                            });
+                            memimg.setOption({
+                                series: [{
+                                    data: memp
+                                }]
+                            });
+                        }
+                        /*if (memp.length >= 38) {
                             for (let index = 0; index < memp.length - 1; index++) {
                                 memp[index] = memp[index + 1]
                             }
@@ -561,12 +603,13 @@
                         }
                         point.x = time[cpup.length - 1];
                         point.y = 150;
-                        $('polyline')[1].points.appendItem(point);
+                        $('polyline')[1].points.appendItem(point);*/
                     }
                 }
             })
         }
-        update()
+        update();
+
         $("#net").change(function () {
             $(".cardinfo").hide()
             name = "#info_" + $("#net")[0].value
