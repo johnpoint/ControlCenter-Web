@@ -66,6 +66,10 @@
                         $('.panel-index')[index].style.color = "red";
                     }
                 }
+            },
+            error: function () {
+                $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                $('#errorMsg').modal('show')
             }
         });
 

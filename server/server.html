@@ -475,7 +475,8 @@
                     $('#cversion')[0].innerText = statusdata["Version"]
                 },
                 error: function () {
-                    $('#error')[0].innerHTML = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span></button ><strong>Warning!</strong> 服务器连接失败!</div > '
+                    $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                    $('#errorMsg').modal('show')
                 }
             });
         }
@@ -587,42 +588,6 @@
                                 }]
                             });
                         }
-                        /*if (memp.length >= 38) {
-                            for (let index = 0; index < memp.length - 1; index++) {
-                                memp[index] = memp[index + 1]
-                            }
-                            memp.pop()
-                        }
-                        if (cpup.length >= 38) {
-                            for (let index = 0; index < cpup.length - 1; index++) {
-                                cpup[index] = cpup[index + 1]
-                            }
-                            cpup.pop()
-                        }
-                        $('polyline')[0].points.clear();
-                        point.x = time[0];
-                        point.y = 150;
-                        $('polyline')[0].points.appendItem(point);
-                        for (let index = 0; index < memp.length; index++) {
-                            point.x = time[index];
-                            point.y = 150 - memp[index];
-                            $('polyline')[0].points.appendItem(point);
-                        }
-                        point.x = time[memp.length - 1];
-                        point.y = 150;
-                        $('polyline')[0].points.appendItem(point);
-                        $('polyline')[1].points.clear();
-                        point.x = time[0];
-                        point.y = 150;
-                        $('polyline')[1].points.appendItem(point);
-                        for (let index = 0; index < cpup.length; index++) {
-                            point.x = time[index];
-                            point.y = 150 - cpup[index];
-                            $('polyline')[1].points.appendItem(point);
-                        }
-                        point.x = time[cpup.length - 1];
-                        point.y = 150;
-                        $('polyline')[1].points.appendItem(point);*/
                     }
                 }
             })
@@ -691,6 +656,10 @@
                             $('#ld2').hide();
                         }
                     })
+                },
+                error: function () {
+                    $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                    $('#errorMsg').modal('show')
                 }
             });
         }
@@ -776,7 +745,8 @@
                     })
                 },
                 error: function () {
-                    $('#error')[0].innerHTML = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span></button ><strong>Warning!</strong> 服务器连接失败!</div > '
+                    $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                    $('#errorMsg').modal('show')
                 }
             });
         }
@@ -816,7 +786,8 @@
                     })
                 },
                 error: function () {
-                    $('#error')[0].innerHTML = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span></button ><strong>Warning!</strong> 服务器连接失败!</div > '
+                    $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                    $('#errorMsg').modal('show')
                 }
             });
         }
