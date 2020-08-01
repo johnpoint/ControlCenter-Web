@@ -364,14 +364,9 @@
 
         $('#updateconfirm').click(function () {
             $.ajax({
-                "url": apiaddress + "/web/ServerInfo",
-                "method": "PUT",
-                "data": {
-                    "id": window.location.search.replace("?id=", ''),
-                    "update": 1
-                },
+                "url": apiaddress + "/web/Server/" + window.location.search.replace("?id=", '') + "/Server/5201",
+                "method": "POST",
                 "headers": {
-                    "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 }
             })
@@ -379,14 +374,9 @@
 
         $('#syncbtn').click(function () {
             $.ajax({
-                "url": apiaddress + "/web/ServerInfo",
-                "method": "PUT",
-                "data": {
-                    "id": window.location.search.replace("?id=", ''),
-                    "update": 3
-                },
+                "url": apiaddress + "/web/Server/" + window.location.search.replace("?id=", '') + "/Server/5203",
+                "method": "POST",
                 "headers": {
-                    "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 }
             })
@@ -394,14 +384,9 @@
 
         $('#stopbtn').click(function () {
             $.ajax({
-                "url": apiaddress + "/web/ServerInfo",
-                "method": "PUT",
-                "data": {
-                    "id": window.location.search.replace("?id=", ''),
-                    "update": 2
-                },
+                "url": apiaddress + "/web/Server/" + window.location.search.replace("?id=", '') + "/Server/5202",
+                "method": "POST",
                 "headers": {
-                    "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Bearer " + userjwt
                 }
             })
@@ -481,8 +466,45 @@
             });
         }
         getinfo()
+
+        function changeDocker(id, status) {
+            if (status == "start") {
+                $.ajax({
+                    "url": apiaddress + "/web/Server/" + window.location.search.replace("?id=", '') + "/Docker/6201/" + id,
+                    "method": "POST",
+                    "headers": {
+                        "Authorization": "Bearer " + userjwt
+                    },
+                    success: function () {
+                        update()
+                    },
+                    error: function () {
+                        $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                        $('#errorMsg').modal('show')
+                    }
+                })
+            }
+            if (status == "stop") {
+                $.ajax({
+                    "url": apiaddress + "/web/Server/" + window.location.search.replace("?id=", '') + "/Docker/6202/" + id,
+                    "method": "POST",
+                    "headers": {
+                        "Authorization": "Bearer " + userjwt
+                    },
+                    success: function () {
+                        update()
+                    },
+                    error: function () {
+                        $('#errorText')[0].innerText = "服务器出现了错误，请稍后再试。"
+                        $('#errorMsg').modal('show')
+                    }
+                })
+            }
+        }
+        var getstatus = 0;
         var uptime = 0
         function update() {
+            getstatus = 1;
             $.ajax({
                 "url": apiaddress + "/web/ServerInfo",
                 "method": "GET",
@@ -494,6 +516,7 @@
                 data: { id: window.location.search.replace('?id=', '') },
                 success: function (data) {
                     var dom = ""
+                    getstatus = 0;
                     var statusdata = JSON.parse(data[0]["status"])
                     if ((Date.parse(new Date()) / 1000) - statusdata["BootTime"] - statusdata["Uptime"] > 15) {
                         document.getElementsByClassName("progress-bar")[0].className = "progress-bar progress-bar-danger"
@@ -510,6 +533,14 @@
                         $('#disk')[0].innerHTML = ""
                         $("#netcardinfo")[0].innerHTML = ""
                         $("#net")[0].innerHTML = ""
+                        dockerlist = ""
+                        if (statusdata['DockerInfo'] != null) {
+                            statusdata['DockerInfo'].forEach(docker => {
+                                dockerlist += '<div class="panel panel-default"><div class="panel-body"><label>ID: </label>' + docker['ID'] + '<br /><label>Image: </label>' + docker['Image'] +
+                                    '<br />' + docker['Port'] + '<br /><label>Status: </label>' + docker['State'] + '</div></div>'
+                            });
+                        }
+                        $('#dockerlist')[0].innerHTML = dockerlist
                     } else {
                         document.getElementsByClassName("progress-bar")[0].className = "progress-bar progress-bar-info"
                         document.getElementsByClassName("progress-bar")[1].className = "progress-bar progress-bar-info"
@@ -531,6 +562,21 @@
                         $('#cpu')[0].innerHTML = parseInt(statusdata["Percent"]["CPU"]) + '%'
                         $('#disk')[0].style.width = statusdata["Percent"]["Disk"] + '%'
                         $('#disk')[0].innerHTML = parseInt(statusdata["Percent"]["Disk"]) + '%'
+                        dockerlist = ""
+                        if (statusdata['DockerInfo'] != null) {
+                            statusdata['DockerInfo'].forEach(docker => {
+                                if (docker['State'] == "running") {
+                                    statusclass = "btn btn-danger"
+                                    status = "stop"
+                                } else {
+                                    statusclass = "btn btn-success"
+                                    status = "start"
+                                }
+                                dockerlist += '<div class="panel panel-default"><div class="panel-body"><label>ID: </label>' + docker['ID'] + '<br /><label>Image: </label>' + docker['Image'] +
+                                    '<br />' + docker['Port'] + '<label>Status: </label>' + docker['State'] + '<br><button class="' + statusclass + '" onclick="changeDocker(\'' + docker['ID'] + "','" + status + '\')">' + status + '</button></div></div>'
+                            });
+                        }
+                        $('#dockerlist')[0].innerHTML = dockerlist
                         var keyl = []
                         var i = 0
                         for (var key in statusdata["Network"]) {
@@ -602,7 +648,7 @@
         const timeId = setInterval(() => {
             if (true) {
                 clearInterval(this.timeId)
-            }; if (status == 0) { update() };
+            }; if (getstatus == 0) { update() };
         }, 3000)
 
         $('#logout').click(function () {
