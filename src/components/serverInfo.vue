@@ -2,7 +2,7 @@
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="Overview" name="overview">
       <el-row class="row">
-        <el-col :lg="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>IPv4</span>
@@ -12,13 +12,33 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :lg="12" :xs="24" v-if="info.ipv6!=info.ipv4">
+        <el-col :lg="6" :xs="24">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>IPv6</span>
             </div>
             <div class="text item">
-              {{ info.ipv6 }}
+              {{ info.ipv6==info.ipv4?"None":info.ipv6 }}
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>Uptime</span>
+            </div>
+            <div class="text item">
+              {{ info.uptime }}
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>Load</span>
+            </div>
+            <div class="text item">
+              {{ info.load }}
             </div>
           </el-card>
         </el-col>

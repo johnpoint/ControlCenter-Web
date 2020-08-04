@@ -20,14 +20,8 @@ export default {
   data() {
     return {
       pageName: ["Certificate"],
-      tableHeader: ["domain", "Issued", "Expires", "Issuer"],
-      tableData: [{
-        id: 29,
-        domain: 'lvcshu.com',
-        Issued: '2019-08-27 21:58:55',
-        Expires: '2020-08-27 21:58:55',
-        Issuer: 'CN=AlphaSSL CA - SHA256 - G2,O=GlobalSign nv-sa,C=BE'
-      }]
+      tableHeader: ["domain", "Issued", "Expires"],
+      tableData: [],
     }
   },
   mounted() {

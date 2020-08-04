@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       pageName: ["Server"],
-      tableHeader: ["ipv4", "ipv6", "nickName", "uptime", "load"],
+      tableHeader: ["ipv4", "nickName", "uptime"],
       tableOption: {view: true},
       tableData: [],
       timer: null,
@@ -52,7 +52,7 @@ export default {
             ipv4: data[i].ipv4,
             ipv6: data[i].ipv6,
             nickName: data[i].hostname,
-            load: status.Load.load1 + " " + status.Load.load5 + " " + status.Load.load15,
+            load: status.Load.load1.toFixed(2) + " " + status.Load.load5.toFixed(2) + " " + status.Load.load15.toFixed(2),
             uptime: comm.timeSwitch(status.Uptime),
             active: status.BootTime + status.Uptime + 5 - Date.parse(Date()) / 1000 < 0 ? false : true
           })

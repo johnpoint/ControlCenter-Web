@@ -36,7 +36,7 @@ export default {
       },
       rules: {
         email: [
-          {required: true, message: '请输入 UserID', trigger: 'blur'},
+          {required: true, message: '请输入 Email', trigger: 'blur'},
           {min: 3, message: '长度大于 3 个字符', trigger: 'blur'}
         ],
         password: [

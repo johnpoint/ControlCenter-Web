@@ -2,3 +2,8 @@ body {
     height: 100%;
     margin: 0px !important;
 }
+
+.main{
+    margin: auto;
+    width: 95%;
+}

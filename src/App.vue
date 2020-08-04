@@ -1,6 +1,9 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div>
+    <topMenu v-if="$route.path!='/Login'"/>
+    <div id="app" class="main">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -14,3 +17,12 @@
   height: 100%;
 }
 </style>
+<script>
+import topMenu from '@/components/topMenu'
+
+export default {
+  components: {
+    topMenu
+  }
+}
+</script>
