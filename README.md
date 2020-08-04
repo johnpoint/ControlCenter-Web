@@ -1,8 +1,24 @@
-# ControlCenter-Web
+# console-vue
 
-## 项目仓库列表
+## Project setup
+```
+npm install
+```
 
-- [ControlCenter-Server 主控](https://github.com/johnpoint/ControlCenter-Server)
-- [ControlCenter-Client 被控端](https://github.com/johnpoint/ControlCenter-Client)
-- [ControlCenter-Web 前端](https://github.com/johnpoint/ControlCenter-Web)
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

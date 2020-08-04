@@ -1,0 +1,73 @@
+<template>
+  <div class="server">
+    <mainLayout :router="pageName"></mainLayout>
+    <el-main>
+      <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption"/>
+    </el-main>
+  </div>
+</template>
+
+<script>
+import mainLayout from '@/layouts/mainLayout'
+import serverList from '@/components/itemList'
+import comm from "@/components/comm"
+import config from "@/config";
+
+export default {
+  components: {
+    mainLayout,
+    serverList
+  },
+  data() {
+    return {
+      pageName: ["Server"],
+      tableHeader: ["ipv4", "ipv6", "nickName", "uptime", "load"],
+      tableOption: {view: true},
+      tableData: [],
+      timer: null,
+    }
+  },
+  mounted() {
+    this.getServer();
+    this.timer = setInterval(this.getServer, 3000);
+  },
+  beforeRouteLeave(to, from, next) {
+    window.clearInterval(this.timer);
+    next();
+  },
+  methods: {
+    getServer: function () {
+      this.$http.get(config.apiAddress + "/web/ServerInfo", {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        var data = res.body
+        this.tableData = []
+        for (let i = 0; i < data.length; i++) {
+          var status = JSON.parse(data[i].status)
+          this.tableData.push({
+            id: data[i].ID,
+            ipv4: data[i].ipv4,
+            ipv6: data[i].ipv6,
+            nickName: data[i].hostname,
+            load: status.Load.load1 + " " + status.Load.load5 + " " + status.Load.load15,
+            uptime: comm.timeSwitch(status.Uptime),
+            active: status.BootTime + status.Uptime + 5 - Date.parse(Date()) / 1000 < 0 ? false : true
+          })
+        }
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
+    },
+  }
+}
+</script>
+
+<style scoped>
+</style>
