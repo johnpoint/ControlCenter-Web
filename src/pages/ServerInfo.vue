@@ -1,7 +1,7 @@
 <template>
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
-    <el-main>
+    <el-main v-loading.fullscreen.lock="fullscreenLoading">
       <serverInfo :info="info" :beforeinfo="beforeinfo"/>
     </el-main>
   </div>
@@ -24,9 +24,10 @@ export default {
       timer: null,
       info: null,
       beforeinfo: null,
+      fullscreenLoading: true
     }
   },
-  mounted() {
+  created() {
     this.getInfo();
     this.getInfo();
     this.timer = setInterval(this.getInfo, 3000)
@@ -59,6 +60,7 @@ export default {
             status: status,
           }
         }
+        this.fullscreenLoading = false
       }, function (res) {
         this.$notify({
           title: 'Server Warning',

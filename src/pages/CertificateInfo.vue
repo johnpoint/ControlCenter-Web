@@ -1,7 +1,7 @@
 <template>
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
-    <el-main>
+    <el-main v-loading.fullscreen.lock="fullscreenLoading">
       <el-row>
         <el-col :lg="4" :sm="8" class="col">
           <el-card class="card">
@@ -67,10 +67,32 @@
       <el-progress :percentage="cerInfo.percent"
                    :status="((!cerInfo.active?'warning':'success')=='warning' && cerInfo.isExpires)?'exception':'warning'"></el-progress>
       <el-row>
-        <el-col :lg="24">
+        <el-col :lg="12" class="col">
           <el-card>
+            <div slot="header" class="clearfix">
+              <span>Certificate Info</span>
+            </div>
             <el-button @click="editfullchain = true">Fullchain</el-button>
             <el-button @click="editkey = true">privateKey</el-button>
+          </el-card>
+        </el-col>
+        <el-col :lg="12" class="col">
+          <el-card>
+            <div slot="header" class="clearfix">
+              <span>Certificate Option</span>
+            </div>
+            <el-button type="danger" @click="dialogVisible = true">Delete</el-button>
+            <el-dialog
+                title="Dangerous operation"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+              <span>This operation is very dangerous, please confirm the operation you want to perform a second time</span>
+              <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisible = false">cancel</el-button>
+    <el-button type="danger" @click="dialogVisible = false">confirm</el-button>
+  </span>
+            </el-dialog>
           </el-card>
         </el-col>
       </el-row>
@@ -85,7 +107,7 @@
           <el-input
               class="textarea"
               type="textarea"
-              disabled="FullchainEdit"
+              :disabled="FullchainEdit"
               :autosize="{ minRows: 2, maxRows: 20}"
               placeholder="fullchain"
               v-model="Fullchain">
@@ -93,8 +115,11 @@
         </el-card>
         <el-card>
           <el-button>Copy</el-button>
-          <el-button>Edit</el-button>
-          <el-button>Update</el-button>
+          <el-button @click="FullchainEdit=(FullchainEdit?false:true)">{{
+              FullchainEdit ? "Edit" : "Cancal"
+            }}
+          </el-button>
+          <el-button v-if="!FullchainEdit">Update</el-button>
         </el-card>
       </el-drawer>
       <el-drawer
@@ -108,7 +133,7 @@
           <el-input
               class="textarea"
               type="textarea"
-              disabled="privateKey"
+              :disabled="privateKeyEdit"
               :autosize="{ minRows: 2, maxRows: 20}"
               placeholder="privateKey"
               v-model="privateKey">
@@ -116,8 +141,11 @@
         </el-card>
         <el-card>
           <el-button>Copy</el-button>
-          <el-button>Edit</el-button>
-          <el-button>Update</el-button>
+          <el-button @click="privateKeyEdit=(privateKeyEdit?false:true)">{{
+              privateKeyEdit ? "Edit" : "Cancal"
+            }}
+          </el-button>
+          <el-button v-if="!privateKeyEdit" @click="centerDialogVisible=true">Update</el-button>
         </el-card>
       </el-drawer>
     </el-main>
@@ -141,7 +169,9 @@ export default {
       privateKey: '',
       privateKeyEdit: true,
       editfullchain: false,
-      editkey: false
+      editkey: false,
+      dialogVisible: false,
+      fullscreenLoading: true,
     }
   },
   mounted() {
@@ -172,6 +202,7 @@ export default {
           this.privateKey = data[i].key;
           this.Fullchain = data[i].fullchain
         }
+        this.fullscreenLoading = false;
       }, function (res) {
         this.$notify({
           title: 'Server Warning',

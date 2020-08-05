@@ -2,7 +2,7 @@
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
     <el-main>
-      <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption"/>
+      <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
     </el-main>
   </div>
 </template>
@@ -25,6 +25,7 @@ export default {
       tableOption: {view: true},
       tableData: [],
       timer: null,
+      loading: true,
     }
   },
   mounted() {
@@ -57,6 +58,7 @@ export default {
             active: status.BootTime + status.Uptime + 5 - Date.parse(Date()) / 1000 < 0 ? false : true
           })
         }
+        this.loading = false;
       }, function (res) {
         this.$notify({
           title: 'Server Warning',

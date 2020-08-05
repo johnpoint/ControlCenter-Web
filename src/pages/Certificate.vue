@@ -2,7 +2,7 @@
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
     <el-main>
-      <serverList :table-header="tableHeader" :table-data="tableData"/>
+      <serverList :table-header="tableHeader" :table-data="tableData" v-loading="loading"/>
     </el-main>
   </div>
 </template>
@@ -22,6 +22,7 @@ export default {
       pageName: ["Certificate"],
       tableHeader: ["domain", "Issued", "Expires"],
       tableData: [],
+      loading: true,
     }
   },
   mounted() {
@@ -47,6 +48,7 @@ export default {
             active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true
           })
         }
+        this.loading = false
       }, function (res) {
         this.$notify({
           title: 'Server Warning',

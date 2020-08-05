@@ -1,6 +1,6 @@
 <template>
   <el-container v-on:keyup.enter="submitForm('ruleForm')">
-    <el-main>
+    <el-main v-loading.fullscreen.lock="loading">
       <div class="login">
         <h1>Login</h1>
         <div style="margin: 20px;"></div>
@@ -32,7 +32,8 @@ export default {
       labelPosition: 'right',
       ruleForm: {
         email: '',
-        password: ''
+        password: '',
+        loading: false
       },
       rules: {
         email: [
@@ -58,6 +59,7 @@ export default {
       }
     },
     submitForm(name) {
+      this.loading = true;
       this.$refs[name].validate((valid) => {
         if (valid) {
           let formData = new FormData();
@@ -84,17 +86,20 @@ export default {
                 message: data.Info
               });
             }
+            this.loading = false;
           }, function (res) {
             this.$notify.error({
               title: 'Error',
               message: res.status
             });
+            this.loading = false;
           })
         } else {
           this.$notify.error({
             title: 'Warning',
             type: 'warning'
           });
+          this.loading = false;
           return false;
         }
       });
