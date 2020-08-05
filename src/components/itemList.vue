@@ -27,6 +27,17 @@
             type="danger"
             @click="handleStop(scope.$index, scope.row)">Stop
         </el-button>
+        <el-button
+            v-if="option.add"
+            size="mini"
+            @click="handleAdd(scope.$index, scope.row)">Add
+        </el-button>
+        <el-button
+            v-if="option.remove"
+            size="mini"
+            type="danger"
+            @click="handleRemove(scope.$index, scope.row)">Remove
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -39,6 +50,9 @@ import router from "@/router";
 export default {
   methods: {
     tableRowClassName({rowIndex}) {
+      if (this.option.color == false) {
+        return '';
+      }
       if (this.tableData[rowIndex].active == undefined) {
         return '';
       }
@@ -56,6 +70,12 @@ export default {
     },
     handleStart: function () {
 
+    },
+    handleAdd: function () {
+
+    },
+    handleRemove: function () {
+
     }
   },
   props: {
@@ -66,7 +86,7 @@ export default {
       default: []
     },
     option: {
-      default: {view: true, stop: false, start: false}
+      default: {view: true, stop: false, start: false, add: false, remove: false, color: true}
     },
   },
   data() {
