@@ -1,11 +1,11 @@
 <template>
-  <el-container v-on:keyup.enter="submitForm('ruleForm')">
-    <el-main>
-      <div class="login">
-        <h1>Login</h1>
-        <div style="margin: 20px;"></div>
-        <el-form ref="ruleForm" :label-position="labelPosition" :model="ruleForm" :rules="rules"
+  <div class="login">
+    <div class="login-warp">
+      <el-row type="flex" justify="center">
+        <el-form ref="ruleForm" :label-position="labelPosition" :model="ruleForm" :rules="rules" label-width="80px"
                  :hide-required-asterisk=true>
+          <h3>Login</h3>
+          <br>
           <el-form-item label="EMail" prop="email">
             <el-input v-model="ruleForm.email"></el-input>
           </el-form-item>
@@ -16,9 +16,9 @@
             <el-button type="primary" @click="submitForm('ruleForm')">OK</el-button>
           </el-form-item>
         </el-form>
-      </div>
-    </el-main>
-  </el-container>
+      </el-row>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -105,17 +105,53 @@ export default {
 </script>
 
 <style scoped>
-body {
-  background-color: #8c939d;
-}
 
 .login {
-  align-items: center;
-  position: absolute;
   top: 30%;
-  left: 30%;
-  width: 40%;
-  padding: 25px;
-  box-shadow: 0 0 20px 0px rgb(140, 197, 255);
+  position: absolute;
+  width: 100%;
+  height: 740px;
+  background-size: cover;
+  overflow: hidden;
 }
+
+.login-wrap {
+  background-size: cover;
+  width: 400px;
+  height: 600px;
+  margin: 215px auto;
+  overflow: hidden;
+  padding-top: 10px;
+  line-height: 40px;
+}
+
+#password {
+  margin-bottom: 5px;
+}
+
+h3 {
+  color: #0babeab8;
+  font-size: 24px;
+}
+
+hr {
+  background-color: #444;
+  margin: 20px auto;
+}
+
+a {
+  text-decoration: none;
+  color: #aaa;
+  font-size: 15px;
+}
+
+a:hover {
+  color: coral;
+}
+
+.el-button {
+  width: 80%;
+  margin-left: -50px;
+}
+
 </style>
