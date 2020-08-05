@@ -72,8 +72,7 @@
             <div slot="header" class="clearfix">
               <span>Certificate Info</span>
             </div>
-            <el-button @click="editfullchain = true">Fullchain</el-button>
-            <el-button @click="editkey = true">privateKey</el-button>
+            <el-button @click="editfullchain = true">Fullchain & privateKey</el-button>
           </el-card>
         </el-col>
         <el-col :lg="12" class="col">
@@ -107,25 +106,12 @@
           <el-input
               class="textarea"
               type="textarea"
-              :disabled="FullchainEdit"
+              :disabled="cerInfoEdit"
               :autosize="{ minRows: 2, maxRows: 20}"
               placeholder="fullchain"
               v-model="Fullchain">
           </el-input>
         </el-card>
-        <el-card>
-          <el-button>Copy</el-button>
-          <el-button @click="FullchainEdit=(FullchainEdit?false:true)">{{
-              FullchainEdit ? "Edit" : "Cancal"
-            }}
-          </el-button>
-          <el-button v-if="!FullchainEdit">Update</el-button>
-        </el-card>
-      </el-drawer>
-      <el-drawer
-          :visible.sync="editkey"
-          direction="rtl"
-          size="65%">
         <el-card>
           <div slot="header" class="clearfix">
             <span>privateKey</span>
@@ -133,19 +119,18 @@
           <el-input
               class="textarea"
               type="textarea"
-              :disabled="privateKeyEdit"
+              :disabled="cerInfoEdit"
               :autosize="{ minRows: 2, maxRows: 20}"
               placeholder="privateKey"
               v-model="privateKey">
           </el-input>
         </el-card>
         <el-card>
-          <el-button>Copy</el-button>
-          <el-button @click="privateKeyEdit=(privateKeyEdit?false:true)">{{
-              privateKeyEdit ? "Edit" : "Cancal"
+          <el-button @click="cerInfoEdit=(cerInfoEdit?false:true)">{{
+              cerInfoEdit ? "Edit" : "Cancal"
             }}
           </el-button>
-          <el-button v-if="!privateKeyEdit" @click="centerDialogVisible=true">Update</el-button>
+          <el-button v-if="!cerInfoEdit" @click="updateInfo">Update</el-button>
         </el-card>
       </el-drawer>
     </el-main>
@@ -167,9 +152,8 @@ export default {
       Fullchain: '',
       FullchainEdit: true,
       privateKey: '',
-      privateKeyEdit: true,
+      cerInfoEdit: true,
       editfullchain: false,
-      editkey: false,
       dialogVisible: false,
       fullscreenLoading: true,
     }
@@ -190,6 +174,7 @@ export default {
           var nn = Date.parse(new Date()) / 1000, na = data[i].NotAfter, nb = data[i].NotBefore;
           this.cerInfo = {
             id: data[i].id,
+            name: data[i].name,
             domain: data[i].DNSNames,
             Issuer: data[i].Issuer,
             Subject: data[i].Subject,
@@ -203,6 +188,39 @@ export default {
           this.Fullchain = data[i].fullchain
         }
         this.fullscreenLoading = false;
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
+    },
+    updateInfo: function () {
+      this.$http.post(config.apiAddress + "/web/Certificate", {
+        name: this.cerInfo.name,
+        fullchain: this.Fullchain,
+        key: this.privateKey
+      }, {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        if (res.body.Code != 200) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.body.Info,
+            type: 'warning'
+          })
+        } else {
+          this.$notify({
+            title: 'Update Success',
+            message: res.body.Info,
+            type: 'success'
+          })
+          this.cerInfoEdit = true;
+        }
       }, function (res) {
         this.$notify({
           title: 'Server Warning',

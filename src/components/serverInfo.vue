@@ -106,12 +106,16 @@
                   :option="tableDockerOption"/>
       </el-tab-pane>
       <el-tab-pane label="Certificate" name="Certificate">
+        <el-button @click="getCerList" type="primary" plain style="float: left"><i class="el-icon-refresh-right"></i>
+        </el-button>
         <item-list :table-data="certificateData" :table-header="certificateTableHeader"
                    :option="tableCertificateOption"></item-list>
       </el-tab-pane>
       <el-tab-pane label="Tasks" name="Tasks">
-        <item-list :table-data="certificateData" :table-header="certificateTableHeader"
-                   :option="tableCertificateOption"></item-list>
+        <el-button @click="getTask" type="primary" plain style="float: left"><i class="el-icon-refresh-right"></i>
+        </el-button>
+        <item-list :table-data="taskTableData" :table-header="taskTableHeader"
+                   :option="{color:false,view:false,type:'task'}"></item-list>
       </el-tab-pane>
       <el-tab-pane label="Option" name="Option">
         <el-row>
@@ -121,20 +125,22 @@
                 <span>Option</span>
               </div>
               <p>Client Version: {{ info.status.Version }}</p>
-              <el-button>Upgrade</el-button>
-              <el-button>Sync Data</el-button>
-              <el-button type="warning">Restart</el-button>
-              <el-button type="danger" @click="dialogVisible=true;stopServer=true">Stop</el-button>
-              <el-button type="danger" @click="dialogVisible=true;removeServer=true">Delete</el-button>
+              <el-button @click="clientChange.upgrade=true;pushChange()">Upgrade</el-button>
+              <el-button @click="clientChange.sync=true;pushChange()">Sync Data</el-button>
+              <el-button @click="clientChange.restart=true;pushChange()" type="warning">Restart</el-button>
+              <el-button type="danger" @click="secondConfirmDialog=true;clientChange.stop=true;">Stop
+              </el-button>
+              <el-button type="danger" @click="secondConfirmDialog=true;clientChange.removeServer=true;">Delete
+              </el-button>
               <el-dialog
                   title="Dangerous operation"
-                  :visible.sync="dialogVisible"
+                  :visible.sync="secondConfirmDialog"
                   width="30%"
                   :before-close="handleClose">
                 <span>This operation is very dangerous, please confirm the operation you want to perform a second time</span>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="dialogVisible=false;">cancel</el-button>
-                    <el-button type="danger" @click="dialogVisible=false;pushChange()">confirm</el-button>
+                    <el-button type="primary" @click="secondConfirmDialog=false;">cancel</el-button>
+                    <el-button type="danger" @click="secondConfirmDialog=false;pushChange()">confirm</el-button>
                 </span>
               </el-dialog>
             </el-card>
@@ -147,6 +153,7 @@
 
 <script>
 import itemList from '@/components/itemList'
+import config from "@/config";
 
 export default {
   name: "serverInfo",
@@ -174,12 +181,9 @@ export default {
         status: {DockerInfo: [], Network: {}}
       }]
     },
-    certificateData: {
-      default: []
-    },
     certificateOnServer: {
       default: []
-    }
+    },
   },
   data() {
     return {
@@ -194,14 +198,22 @@ export default {
       certificateTableHeader: ["domain", "Issued", "Expires"],
       tableDockerOption: {stop: true, start: true},
       tableCertificateOption: {add: true, remove: true, color: false},
-      dialogVisible: false,
-      removeServer: false,
-      stopServer: false,
-      restartServer: false,
-      syncData: false,
-      upgradeClient: false,
-      clientChange: {},
+      secondConfirmDialog: false,
+      clientChange: {
+        remove: false,
+        stop: false,
+        restart: false,
+        sync: false,
+        upgrade: false,
+      },
+      taskTableHeader: ["ID", "Type", "Code", "Info", "Active"],
+      taskTableData: [],
+      certificateData: [],
     };
+  },
+  mounted() {
+    this.getTask();
+    this.getCerList();
   },
   methods: {
     handleClick(tab, event) {
@@ -212,8 +224,111 @@ export default {
       this.removeServer = false
     },
     pushChange: function () {
-
-    }
+      let keys = Object.keys(this.clientChange);
+      keys.forEach(key => {
+        if (this.clientChange[key]) {
+          this.$http.post(config.apiAddress + "/web/Server/" + this.$route.params.id + "/Server/" + config.command[key], {}, {
+            headers: {
+              'Authorization': "Bearer " + this.$store.state.jwt,
+              'Accept': 'application/json'
+            }
+          }).then(function (res) {
+            console.log(res.body)
+            if (res.body.Code != 200) {
+              this.$notify({
+                title: 'Server Warning',
+                message: res.body.Info,
+                type: 'warning'
+              })
+            } else {
+              this.$notify({
+                title: 'Success',
+                message: "Task successfully added",
+                type: 'success'
+              })
+            }
+          }, function (res) {
+            this.$notify({
+              title: 'Server Warning',
+              message: res.status,
+              type: 'warning'
+            })
+          })
+        }
+      })
+    },
+    getTask: function () {
+      this.$http.get(config.apiAddress + "/web/ServerInfo/Task?id=" + this.$route.params.id, {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        let data = res.body
+        this.taskTableData = [];
+        data.forEach(item => {
+          this.taskTableData.push({
+            ID: item.ID,
+            Type: item.Type!=1?'Docker':'Client',
+            TargetID: item.TargetID,
+            Code: item.Code,
+            Info: item.Info,
+            Active: item.Active == 1 ? "队列中" : "未激活",
+          })
+        })
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
+    },
+    getCerList: function () {
+      this.$http.get(config.apiAddress + '/web/Certificate', {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        },
+      }).then(function (res) {
+        console.log(res.body)
+        let data = res.body;
+        this.certificateData = []
+        for (let i = 0; i < data.length; i++) {
+          this.certificateData.push({
+            id: data[i].id,
+            domain: data[i].DNSNames,
+            Issuer: data[i].Issuer,
+            Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + new Date(data[i].NotAfter * 1000).getMonth() + "-" + new Date(data[i].NotAfter * 1000).getDate(),
+            Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + new Date(data[i].NotBefore * 1000).getMonth() + "-" + new Date(data[i].NotBefore * 1000).getDate(),
+            active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true
+          })
+        }
+        this.$http.get(config.apiAddress + '/web/ServerInfo/Certificate?id=' + this.$route.params.id, {
+          headers: {
+            'Authorization': "Bearer " + this.$store.state.jwt,
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          let data = res.body;
+          data.forEach(item => {
+            this.certificateOnServer.push(item.CertificateID)
+          })
+        }, function (res) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.status,
+            type: 'warning'
+          })
+        })
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
+    },
   }
 }
 </script>

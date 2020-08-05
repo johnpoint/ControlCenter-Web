@@ -9,6 +9,7 @@ export default {
         upgrade: 5201,
         stop: 5202,
         sync: 5203,
+        restart: 5204,
         docker: {
             start: 6201,
             stop: 6202
