@@ -70,16 +70,43 @@
         <el-col :lg="12" class="col">
           <el-card>
             <div slot="header" class="clearfix">
-              <span>Certificate Info</span>
+              <span>Certificate Fullchain</span>
             </div>
-            <el-button @click="editfullchain = true">Fullchain & privateKey</el-button>
+            <el-input
+                class="textarea"
+                type="textarea"
+                :disabled="cerInfoEdit"
+                :autosize="{ minRows: 2, maxRows: 20}"
+                placeholder="fullchain"
+                v-model="Fullchain">
+            </el-input>
           </el-card>
         </el-col>
         <el-col :lg="12" class="col">
           <el-card>
             <div slot="header" class="clearfix">
+              <span>Certificate Fullchain</span>
+            </div>
+            <el-input
+                class="textarea"
+                type="textarea"
+                :disabled="cerInfoEdit"
+                :autosize="{ minRows: 2, maxRows: 20}"
+                placeholder="privateKey"
+                v-model="privateKey">
+            </el-input>
+          </el-card>
+        </el-col>
+        <el-col :lg="24" class="col">
+          <el-card>
+            <div slot="header" class="clearfix">
               <span>Certificate Option</span>
             </div>
+            <el-button @click="cerInfoEdit=(cerInfoEdit?false:true)">{{
+                cerInfoEdit ? "Edit" : "Cancal"
+              }}
+            </el-button>
+            <el-button v-if="!cerInfoEdit" @click="updateInfo">Update</el-button>
             <el-button type="danger" @click="dialogVisible = true">Delete</el-button>
             <el-dialog
                 title="Dangerous operation"
@@ -95,44 +122,6 @@
           </el-card>
         </el-col>
       </el-row>
-      <el-drawer
-          :visible.sync="editfullchain"
-          direction="rtl"
-          size="65%">
-        <el-card>
-          <div slot="header" class="clearfix">
-            <span>Fullchain</span>
-          </div>
-          <el-input
-              class="textarea"
-              type="textarea"
-              :disabled="cerInfoEdit"
-              :autosize="{ minRows: 2, maxRows: 20}"
-              placeholder="fullchain"
-              v-model="Fullchain">
-          </el-input>
-        </el-card>
-        <el-card>
-          <div slot="header" class="clearfix">
-            <span>privateKey</span>
-          </div>
-          <el-input
-              class="textarea"
-              type="textarea"
-              :disabled="cerInfoEdit"
-              :autosize="{ minRows: 2, maxRows: 20}"
-              placeholder="privateKey"
-              v-model="privateKey">
-          </el-input>
-        </el-card>
-        <el-card>
-          <el-button @click="cerInfoEdit=(cerInfoEdit?false:true)">{{
-              cerInfoEdit ? "Edit" : "Cancal"
-            }}
-          </el-button>
-          <el-button v-if="!cerInfoEdit" @click="updateInfo">Update</el-button>
-        </el-card>
-      </el-drawer>
     </el-main>
   </div>
 </template>
@@ -150,11 +139,8 @@ export default {
       pageName: ["Certificate", this.$route.params.id],
       cerInfo: {},
       Fullchain: '',
-      FullchainEdit: true,
       privateKey: '',
       cerInfoEdit: true,
-      editfullchain: false,
-      dialogVisible: false,
       fullscreenLoading: true,
     }
   },
