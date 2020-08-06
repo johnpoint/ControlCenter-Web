@@ -14,8 +14,8 @@
     </el-menu-item>
     <el-submenu index="." v-if="userStatus" style="float: right">
       <template slot="title">{{ username }}</template>
-      <el-menu-item index="2-1">Setting</el-menu-item>
-      <el-menu-item index="2-1">System console</el-menu-item>
+      <el-menu-item index="/Settings">Settings</el-menu-item>
+      <el-menu-item v-if="isAdmin" index="/Console">System console</el-menu-item>
       <el-menu-item @click="logout">Log out</el-menu-item>
     </el-submenu>
     <el-menu-item v-else style="float: right" index="/Login">Login</el-menu-item>
@@ -31,24 +31,27 @@ export default {
   data() {
     return {
       username: '',
-      userStatus: this.$store.state.isLogin,
+      userStatus: false,
       activeIndex: this.$route.path,
-      menuList:config.menu,
-      loading: false
+      menuList: config.menu,
+      loading: false,
+      isAdmin: false,
     };
   },
   mounted() {
-    this.getUser()
+    this.getUser();
   },
   methods: {
     getUser: function () {
-      if (!this.$store.state.isLogin) {
+      if (!this.$store.state.isLogin && localStorage.getItem("isLogin") != "true") {
         this.$notify.error({
           title: 'Error',
           message: "Please sign in"
         });
         router.push("/Login");
-      }else {
+      } else {
+        this.$store.commit("setjwt", localStorage.getItem("jwt"));
+        this.$store.commit("setStatus", true);
         this.$http.get(config.apiAddress + "/web/UserInfo", {
           headers: {
             'Authorization': "Bearer " + this.$store.state.jwt,
@@ -56,7 +59,9 @@ export default {
           }
         }).then(function (res) {
           this.$store.commit('setUserInfo', res.body)
-          this.username = this.$store.state.userInfo.name
+          this.username = this.$store.state.userInfo.name;
+          this.userStatus = true
+          this.isAdmin = (this.$store.state.userInfo.level == 0) ? true : false
         }, function () {
           this.$notify.error({
             title: 'Error',
@@ -65,8 +70,8 @@ export default {
         })
       }
     },
-    logout:function (){
-      this.$store.commit('setStatus',false);
+    logout: function () {
+      this.$store.commit('setStatus', false);
       this.$notify({
         title: 'Success',
         message: 'Successful Log Out',

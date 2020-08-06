@@ -115,7 +115,7 @@
         <el-button @click="getTask" type="primary" plain style="float: left"><i class="el-icon-refresh-right"></i>
         </el-button>
         <item-list :table-data="taskTableData" :table-header="taskTableHeader"
-                   :option="{color:false,view:false,type:'task'}"></item-list>
+                   :option="{color:false,view:false}"></item-list>
       </el-tab-pane>
       <el-tab-pane label="Option" name="Option">
         <el-row>
@@ -196,8 +196,8 @@ export default {
       ],
       tableHeaderDocker: ["ID", "Image", "Name", "State", "Port"],
       certificateTableHeader: ["domain", "Issued", "Expires"],
-      tableDockerOption: {stop: true, start: true},
-      tableCertificateOption: {add: true, remove: true, color: false},
+      tableDockerOption: {docker: true, start: true},
+      tableCertificateOption: {certificate: true, color: false},
       secondConfirmDialog: false,
       clientChange: {
         remove: false,
@@ -209,6 +209,7 @@ export default {
       taskTableHeader: ["ID", "Type", "Code", "Info", "Active"],
       taskTableData: [],
       certificateData: [],
+      certificateDataGot: null,
     };
   },
   mounted() {
@@ -233,7 +234,6 @@ export default {
               'Accept': 'application/json'
             }
           }).then(function (res) {
-            console.log(res.body)
             if (res.body.Code != 200) {
               this.$notify({
                 title: 'Server Warning',
@@ -269,7 +269,7 @@ export default {
         data.forEach(item => {
           this.taskTableData.push({
             ID: item.ID,
-            Type: item.Type!=1?'Docker':'Client',
+            Type: item.Type != 1 ? 'Docker' : 'Client',
             TargetID: item.TargetID,
             Code: item.Code,
             Info: item.Info,
@@ -291,29 +291,32 @@ export default {
           'Accept': 'application/json'
         },
       }).then(function (res) {
-        console.log(res.body)
-        let data = res.body;
-        this.certificateData = []
-        for (let i = 0; i < data.length; i++) {
-          this.certificateData.push({
-            id: data[i].id,
-            domain: data[i].DNSNames,
-            Issuer: data[i].Issuer,
-            Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + new Date(data[i].NotAfter * 1000).getMonth() + "-" + new Date(data[i].NotAfter * 1000).getDate(),
-            Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + new Date(data[i].NotBefore * 1000).getMonth() + "-" + new Date(data[i].NotBefore * 1000).getDate(),
-            active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true
-          })
-        }
+        this.certificateDataGot = res.body;
         this.$http.get(config.apiAddress + '/web/ServerInfo/Certificate?id=' + this.$route.params.id, {
           headers: {
             'Authorization': "Bearer " + this.$store.state.jwt,
             'Accept': 'application/json'
           }
         }).then(function (res) {
-          let data = res.body;
-          data.forEach(item => {
+          let data = this.certificateDataGot;
+          console.log(data)
+          this.certificateOnServer = []
+          this.certificateData = []
+          let data2 = res.body;
+          data2.forEach(item => {
             this.certificateOnServer.push(item.CertificateID)
           })
+          for (let i = 0; i < data.length; i++) {
+            this.certificateData.push({
+              id: data[i].id,
+              domain: data[i].DNSNames,
+              Issuer: data[i].Issuer,
+              Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + new Date(data[i].NotAfter * 1000).getMonth() + "-" + new Date(data[i].NotAfter * 1000).getDate(),
+              Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + new Date(data[i].NotBefore * 1000).getMonth() + "-" + new Date(data[i].NotBefore * 1000).getDate(),
+              active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true,
+              onServer: this.certificateOnServer.indexOf(data[i].id) != -1
+            })
+          }
         }, function (res) {
           this.$notify({
             title: 'Server Warning',
@@ -321,6 +324,8 @@ export default {
             type: 'warning'
           })
         })
+
+
       }, function (res) {
         this.$notify({
           title: 'Server Warning',

@@ -9,41 +9,26 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
-        meta: {
-            isLogin: true
-        }
     },
     {
         path: '/404',
         name: "404",
-        component: () => import('@/pages/404'),
-        meta: {
-            isLogin: true
-        }
+        component: () => import('@/pages/statusPages/404'),
     },
     {
         path: '/Login',
         name: "Login",
         component: () => import('@/pages/Login'),
-        meta: {
-            isLogin: false
-        }
     },
     {
         path: '/Server',
         name: "Server",
         component: () => import('@/pages/Server'),
-        meta: {
-            isLogin: false
-        }
     },
     {
         path: '/Server/:id',
         name: "ServerInfo",
         component: () => import('@/pages/ServerInfo'),
-        meta: {
-            isLogin: true
-        }
     },
     {
         path: '/Certificate',
@@ -57,17 +42,21 @@ const routes = [
         path: '/Certificate/:id',
         name: 'CertificateInfo',
         component: () => import('@/pages/CertificateInfo'),
-        meta: {
-            isLogin: true
-        }
+    },
+    {
+        path: '/Console',
+        name: 'Console',
+        component: () => import('@/pages/Console'),
+    },
+    {
+        path: '/Settings',
+        name: 'Settings',
+        component: () => import('@/pages/Settings'),
     },
     {
         path: '*',
         name: "404 Page",
-        component: () => import('@/pages/404'),
-        meta: {
-            isLogin: true
-        }
+        component: () => import('@/pages/statusPages/404'),
     }
 ]
 
