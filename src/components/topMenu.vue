@@ -61,12 +61,11 @@ export default {
           this.$store.commit('setUserInfo', res.body)
           this.username = this.$store.state.userInfo.name;
           this.userStatus = true
-          this.isAdmin = (this.$store.state.userInfo.level == 0) ? true : false
+          this.isAdmin = (this.$store.state.userInfo.level <= 0) ? true : false
         }, function () {
-          this.$notify.error({
-            title: 'Error',
-            message: "Can't Connect Server"
-          });
+          this.$store.commit("setStatus", false);
+          localStorage.removeItem("isLogin");
+          router.push("/Login");
         })
       }
     },

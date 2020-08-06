@@ -1,9 +1,7 @@
 <template>
   <div>
     <mainLayout :router="pageName"></mainLayout>
-    <div v-if="!isAdmin" class="notfounddiv"><h1>403 | Forbidden</h1><label class="subtitle" @click="goHome">Back to the
-      right
-      way</label></div>
+    <Forbidden v-if="!isAdmin"></Forbidden>
     <div v-else>
       <el-card class="row">
         <el-tabs v-model="activeName">
@@ -31,7 +29,17 @@
             <el-row class="row">
               <el-col :lg="12">
                 <el-card>
-                  Download Backup
+                  <div slot="header" class="clearfix">
+                    <span>Download Backup</span>
+                  </div>
+                  <el-form :inline="true" :model="backup" class="demo-form-inline">
+                    <el-form-item label="Token">
+                      <el-input v-model="backup.token" placeholder="Token"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="onSubmit">Download</el-button>
+                    </el-form-item>
+                  </el-form>
                 </el-card>
               </el-col>
             </el-row>
@@ -54,7 +62,7 @@
 </template>
 
 <script>
-import router from "@/router";
+import Forbidden from '@/pages/statusPages/403'
 import mainLayout from "@/layouts/mainLayout";
 import itemList from "@/components/itemList";
 import uploadDatabase from "@/components/uploadDatabase";
@@ -64,7 +72,8 @@ export default {
   components: {
     mainLayout,
     itemList,
-    uploadDatabase
+    uploadDatabase,
+    Forbidden
   },
   data() {
     return {
@@ -81,12 +90,12 @@ export default {
       ],
       Timer: null,
       Loading: true,
+      backup: {
+        token: ''
+      },
     }
   },
   methods: {
-    goHome: function () {
-      router.push({path: '/'})
-    },
     getUserList: function () {
       this.$notify({
         title: 'Loading',
@@ -98,12 +107,11 @@ export default {
           'Accept': 'application/json'
         }
       }).then(function (res) {
-        console.log(res.body)
         this.userTableData = res.body
-      }, function (res) {
+      }, function () {
         this.$notify({
           title: 'Server Warning',
-          message: res.status,
+          message: "登录会话可能已经过期，请尝试重新登录",
           type: 'warning'
         })
       })
@@ -113,10 +121,13 @@ export default {
         this.info = JSON.parse(res.body.Info)
         this.Loading = false
       })
+    },
+    onSubmit: function () {
+      window.open(config.apiAddress + "/web/" + this.backup.token + "/backup","_blank")
     }
   },
   mounted() {
-    this.isAdmin = (this.$store.state.userInfo.level == 0) ? true : false
+    this.isAdmin = (this.$store.state.userInfo.level <= 0) ? true : false
     this.Timer = setInterval(this.getSystemInfo, 5000)
     this.getUserList();
   },

@@ -3,7 +3,7 @@
     <mainLayout :router="pageName"></mainLayout>
     <el-main v-loading.fullscreen.lock="fullscreenLoading">
       <serverInfo :info="info" :beforeinfo="beforeinfo" :certificate-data="certificateData"
-                  :certificate-on-server="certificateOnServer"/>
+                  :certificate-on-server="certificateOnServer" v-if="info && beforeinfo"/>
     </el-main>
   </div>
 </template>

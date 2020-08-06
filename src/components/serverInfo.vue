@@ -106,14 +106,10 @@
                   :option="tableDockerOption"/>
       </el-tab-pane>
       <el-tab-pane label="Certificate" name="Certificate">
-        <el-button @click="getCerList" type="primary" plain style="float: left"><i class="el-icon-refresh-right"></i>
-        </el-button>
         <item-list :table-data="certificateData" :table-header="certificateTableHeader"
                    :option="tableCertificateOption"></item-list>
       </el-tab-pane>
       <el-tab-pane label="Tasks" name="Tasks">
-        <el-button @click="getTask" type="primary" plain style="float: left"><i class="el-icon-refresh-right"></i>
-        </el-button>
         <item-list :table-data="taskTableData" :table-header="taskTableHeader"
                    :option="{color:false,view:false}"></item-list>
       </el-tab-pane>
@@ -181,9 +177,6 @@ export default {
         status: {DockerInfo: [], Network: {}}
       }]
     },
-    certificateOnServer: {
-      default: []
-    },
   },
   data() {
     return {
@@ -210,13 +203,23 @@ export default {
       taskTableData: [],
       certificateData: [],
       certificateDataGot: null,
+      certificateOnServer: null,
+      Timer: null,
     };
   },
   mounted() {
-    this.getTask();
-    this.getCerList();
+    this.update();
+    this.Timer = setInterval(this.update, 5000)
+  },
+  beforeRouteLeave(to, from, next) {
+    window.clearInterval(this.Timer)
+    next()
   },
   methods: {
+    update: function () {
+      this.getTask();
+      this.getCerList();
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -299,7 +302,6 @@ export default {
           }
         }).then(function (res) {
           let data = this.certificateDataGot;
-          console.log(data)
           this.certificateOnServer = []
           this.certificateData = []
           let data2 = res.body;

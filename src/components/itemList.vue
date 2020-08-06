@@ -20,7 +20,7 @@
             v-if="option.docker"
             size="mini"
             :type="(tableData[scope.$index].State == 'running') ? 'danger' : 'primary'"
-            @click="handleStop(scope.$index, scope.row)" plain>
+            @click="handleDocker(scope.$index)" plain>
           {{ (tableData[scope.$index].State == 'running') ? 'Stop' : 'Start' }}
         </el-button>
         <el-button
@@ -32,9 +32,9 @@
         <el-button
             v-if="option.admin"
             size="mini"
-            :type="(tableData[scope.$index].Level != 0) ? 'primary':'danger'"
-            @click="setAsAdministrator(scope.$index, scope.row)" plain>{{
-            (tableData[scope.$index].Level != 0) ? 'Set asadministrator' : 'Cancel administrator rights'
+            :type="(tableData[scope.$index].Level < 1) ? 'danger':'primary'"
+            @click="handleAdmin(scope.$index)" plain>{{
+            !(tableData[scope.$index].Level >= 1) ? 'Cancel administrator rights' : 'Set asadministrator'
           }}
         </el-button>
       </template>
@@ -48,6 +48,9 @@ import router from "@/router";
 import config from "@/config";
 
 export default {
+  mounted() {
+    this.tableDataCopy = this.tableData
+  },
   methods: {
     tableRowClassName({rowIndex}) {
       if (this.option.color == false) {
@@ -65,11 +68,72 @@ export default {
     handleView: function (index, row) {
       router.push(this.$route.path + "/" + row.id)
     },
-    handleStop: function () {
-
+    handleDocker: function (index) {
+      let dockerChange = 6200;
+      if (this.tableData[index].State == "running") {
+        dockerChange = 6202
+      } else {
+        dockerChange = 6201
+      }
+      this.$http.post(config.apiAddress + "/web/Server/" + this.$route.params.id + "/Docker/" + dockerChange + "/" + this.tableData[index].ID, {}, {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        if (res.body.Code == 200) {
+          this.$notify({
+            title: 'Success',
+            type: 'success'
+          });
+        } else {
+          this.$notify({
+            title: 'Error',
+            type: 'error',
+            message: res.body.Info
+          });
+        }
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
     },
-    handleStart: function () {
-
+    handleAdmin: function (index) {
+      console.log(this.tableData[index]);
+      let targetLevel = 0;
+      if (this.tableData[index].Level >= 1) {
+        targetLevel = -1;
+      } else {
+        targetLevel = 1;
+      }
+      this.$http.patch(config.apiAddress + "/web/UserInfo/level/" + this.tableData[index].ID + "/" + targetLevel, {}, {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        if (res.body.Code == 200) {
+          this.$notify({
+            title: 'Success',
+            type: 'success'
+          });
+        } else {
+          this.$notify({
+            title: 'Error',
+            type: 'error',
+            message: res.body.Info
+          });
+        }
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
     },
     handleCertificate: function (index) {
       if (this.tableData[index].onServer) {
@@ -140,7 +204,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      tableDataCopy: [],
+    }
   }
 }
 </script>

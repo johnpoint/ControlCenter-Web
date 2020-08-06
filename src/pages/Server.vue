@@ -59,10 +59,10 @@ export default {
           })
         }
         this.loading = false;
-      }, function (res) {
+      }, function () {
         this.$notify({
           title: 'Server Warning',
-          message: res.status,
+          message: "登录会话可能已经过期，请尝试重新登录",
           type: 'warning'
         })
       })

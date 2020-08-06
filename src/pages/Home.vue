@@ -54,10 +54,10 @@ export default {
         }
       }).then(function (res) {
         this.cards[0].num = res.body.length
-      }, function (res) {
+      }, function () {
         this.$notify({
           title: 'Server Warning',
-          message: res.status,
+          message: "登录会话可能已经过期，请尝试重新登录",
           type: 'warning'
         })
       })
@@ -70,10 +70,10 @@ export default {
         }
       }).then(function (res) {
         this.cards[1].num = res.body.length
-      }, function (res) {
+      }, function () {
         this.$notify({
           title: 'Server Warning',
-          message: res.status,
+          message: "登录会话可能已经过期，请尝试重新登录",
           type: 'warning'
         })
       })
