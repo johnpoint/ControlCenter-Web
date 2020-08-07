@@ -211,9 +211,8 @@ export default {
     this.update();
     this.Timer = setInterval(this.update, 5000)
   },
-  beforeRouteLeave(to, from, next) {
+  beforeDestroy() {
     window.clearInterval(this.Timer)
-    next()
   },
   methods: {
     update: function () {
