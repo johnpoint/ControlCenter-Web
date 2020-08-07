@@ -197,10 +197,14 @@ export default {
       })
     },
     submitPassword: function () {
-      this.$http.patch(config.apiAddress + "/web/UserInfo/Password/" + this.passwordForm.oldpass + "/" + this.passwordForm.pass, null, {
+      this.$http.post(config.apiAddress + "/web/UserInfo/Password", {
+        oldpass: this.passwordForm.oldpass,
+        newpass: this.passwordForm.pass
+      }, {
         headers: {
           'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         }
       }).then(function (res) {
         if (res.body.Code == 200) {
