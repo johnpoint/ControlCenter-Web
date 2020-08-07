@@ -2,6 +2,7 @@
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
     <el-main v-loading.fullscreen.lock="fullscreenLoading">
+      <el-card>{{ time }}</el-card>
       <el-row>
         <el-col :lg="4" :sm="8" class="col">
           <el-card class="card">
@@ -142,12 +143,22 @@ export default {
       privateKey: '',
       cerInfoEdit: true,
       fullscreenLoading: true,
+      timer: null,
+      time: '',
     }
   },
   mounted() {
-    this.getInfo()
+    this.getInfo();
+    this.timer = setInterval(this.updateTime, 500)
+  },
+  beforeRouteUpdate(to, from, next) {
+    window.clearInterval(this.timer)
+    next()
   },
   methods: {
+    updateTime: function () {
+      this.time = new Date().format("yyyy-MM-dd hh:mm:ss");
+    },
     getInfo: function () {
       this.$http.get(config.apiAddress + "/web/Certificate?id=" + this.$route.params.id, {
         headers: {
@@ -164,8 +175,8 @@ export default {
             domain: data[i].DNSNames,
             Issuer: data[i].Issuer,
             Subject: data[i].Subject,
-            Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + (new Date(data[i].NotAfter * 1000).getMonth() + 1) + "-" + new Date(data[i].NotAfter * 1000).getDate(),
-            Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + (new Date(data[i].NotBefore * 1000).getMonth() + 1) + "-" + new Date(data[i].NotBefore * 1000).getDate(),
+            Expires: new Date(data[i].NotAfter * 1000).format("yyyy-MM-dd hh:mm:ss"),
+            Issued: new Date(data[i].NotBefore * 1000).format("yyyy-MM-dd hh:mm:ss"),
             percent: parseInt((nn - nb) / (na - nb) * 100),
             active: parseInt((nn - nb) / (na - nb) * 100) >= 80 ? false : true,
             isExpires: parseInt((nn - nb) / (na - nb) * 100) >= 100 ? true : false

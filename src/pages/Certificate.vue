@@ -2,6 +2,7 @@
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
     <el-main>
+      <el-card>{{ time }}</el-card>
       <serverList :table-header="tableHeader" :table-data="tableData" v-loading="loading"/>
     </el-main>
   </div>
@@ -23,12 +24,22 @@ export default {
       tableHeader: ["domain", "Issued", "Expires"],
       tableData: [],
       loading: true,
+      time:'',
+      timer:null,
     }
   },
   mounted() {
     this.getCertificate();
+    this.timer=setInterval(this.updateTime,500)
+  },
+  beforeRouteUpdate(to,from,next){
+    window.clearInterval(this.timer)
+    next()
   },
   methods: {
+    updateTime:function (){
+      this.time=new Date().format("yyyy-MM-dd hh:mm:ss");
+    },
     getCertificate: function () {
       this.$http.get(config.apiAddress + "/web/Certificate", {
         headers: {
@@ -43,8 +54,8 @@ export default {
             id: data[i].id,
             domain: data[i].DNSNames,
             Issuer: data[i].Issuer,
-            Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + new Date(data[i].NotAfter * 1000).getMonth() + "-" + new Date(data[i].NotAfter * 1000).getDate(),
-            Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + new Date(data[i].NotBefore * 1000).getMonth() + "-" + new Date(data[i].NotBefore * 1000).getDate(),
+            Expires: new Date(data[i].NotAfter * 1000).format("yyyy-MM-dd hh:mm:ss"),
+            Issued: new Date(data[i].NotBefore * 1000).format("yyyy-MM-dd hh:mm:ss"),
             active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true
           })
         }

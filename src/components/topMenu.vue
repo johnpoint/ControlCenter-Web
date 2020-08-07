@@ -36,6 +36,7 @@ export default {
       menuList: config.menu,
       loading: false,
       isAdmin: false,
+      time: '',
     };
   },
   mounted() {
