@@ -7,6 +7,9 @@
         <el-tabs v-model="activeName">
           <el-tab-pane label="System Info" name="info" v-loading="Loading" style="min-height: 300px">
             <el-row v-if="info" class="row">
+              <el-col :lg="24" class="row">
+                Version {{ info.Version }}
+              </el-col>
               <el-col :lg="6" v-for="i in Object.keys(info.Percent)" :key="i">
                 <el-card class="box-card" shadow="hover">
                   <el-progress type="circle" :percentage="parseInt(info.Percent[i])" :show-text="true"
