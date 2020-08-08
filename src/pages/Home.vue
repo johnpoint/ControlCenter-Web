@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <mainLayout :router="pageName"></mainLayout>
     <el-main>
       <el-row>
@@ -83,15 +83,6 @@ export default {
 </script>
 
 <style scoped>
-.home {
-  height: 100%;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  width: 100%;
-  top: 0px;
-}
-
 .box-card {
   width: 95%;
 }
