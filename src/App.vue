@@ -16,22 +16,6 @@
   color: #2c3e50;
   height: 100%;
 }
-
-@media screen and (min-width: 1920px) {
-  .main-view{
-    width: 1200px;
-    margin: auto;
-  }
-}
-
-
-@media screen and (max-width: 1300px) {
-  .main-view{
-    width: 100%;
-    margin: auto;
-  }
-}
-
 </style>
 <script>
 import topMenu from '@/components/topMenu'

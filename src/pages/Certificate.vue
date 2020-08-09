@@ -2,8 +2,16 @@
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
     <el-main>
-      <el-card>{{ time }}</el-card>
-      <serverList :table-header="tableHeader" :table-data="tableData" v-loading="loading"/>
+      <el-card>
+        <el-row>
+          <el-button @click="newCert=(newCert?false:true)" style="float: left" :type="newCert?'':'primary'" plain>
+            {{ newCert ? 'Cancel' : '+1' }}
+          </el-button>
+          <label style="text-align: center">{{ time }}</label>
+        </el-row>
+      </el-card>
+      <newCertificate v-if="newCert" class="row"/>
+      <serverList v-else :table-header="tableHeader" :table-data="tableData" v-loading="loading"/>
     </el-main>
   </div>
 </template>
@@ -12,11 +20,13 @@
 import mainLayout from '@/layouts/mainLayout'
 import serverList from '@/components/itemList'
 import config from "@/config";
+import newCertificate from "@/components/newCertificate";
 
 export default {
   components: {
     mainLayout,
-    serverList
+    serverList,
+    newCertificate
   },
   data() {
     return {
@@ -24,21 +34,22 @@ export default {
       tableHeader: ["domain", "Issued", "Expires"],
       tableData: [],
       loading: true,
-      time:'',
-      timer:null,
+      time: '',
+      timer: null,
+      newCert: false,
     }
   },
   mounted() {
     this.getCertificate();
-    this.timer=setInterval(this.updateTime,500)
+    this.timer = setInterval(this.updateTime, 500)
   },
-  beforeRouteUpdate(to,from,next){
+  beforeRouteUpdate(to, from, next) {
     window.clearInterval(this.timer)
     next()
   },
   methods: {
-    updateTime:function (){
-      this.time=new Date().format("yyyy-MM-dd hh:mm:ss");
+    updateTime: function () {
+      this.time = new Date().format("yyyy-MM-dd hh:mm:ss");
     },
     getCertificate: function () {
       this.$http.get(config.apiAddress + "/web/Certificate", {
