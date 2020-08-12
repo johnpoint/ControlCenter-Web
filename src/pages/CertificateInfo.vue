@@ -14,7 +14,7 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :lg="4" :sm="8" class="col">
+        <el-col :lg="8" :sm="8" class="col">
           <el-card class="card">
             <div slot="header" class="clearfix">
               <span>Subject</span>
@@ -24,33 +24,13 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :lg="4" :sm="8" class="col">
+        <el-col :lg="8" :sm="8" class="col">
           <el-card class="card">
             <div slot="header" class="clearfix">
               <span>Issuer</span>
             </div>
             <div class="text item">
               {{ cerInfo.Issuer }}
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :lg="4" :sm="8" class="col">
-          <el-card class="card">
-            <div slot="header" class="clearfix">
-              <span>Issued On</span>
-            </div>
-            <div class="text item">
-              {{ cerInfo.Issued }}
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :lg="4" :sm="8" class="col">
-          <el-card class="card">
-            <div slot="header" class="clearfix">
-              <span>Expires On</span>
-            </div>
-            <div class="text item">
-              {{ cerInfo.Expires }}
             </div>
           </el-card>
         </el-col>
@@ -64,10 +44,54 @@
             </div>
           </el-card>
         </el-col>
+        <el-col :lg="12" :sm="8" class="col">
+          <el-card class="card">
+            <div slot="header" class="clearfix">
+              <span>Issued On</span>
+            </div>
+            <div class="text item">
+              {{ cerInfo.Issued }}
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :lg="12" :sm="8" class="col">
+          <el-card class="card">
+            <div slot="header" class="clearfix">
+              <span>Expires On</span>
+            </div>
+            <div class="text item">
+              {{ cerInfo.Expires }}
+            </div>
+          </el-card>
+        </el-col>
       </el-row>
       <el-progress :percentage="cerInfo.percent"
                    :status="((!cerInfo.active?'warning':'success')=='warning' && cerInfo.isExpires)?'exception':'warning'"></el-progress>
       <el-row>
+        <el-col :lg="24" class="col">
+          <el-card>
+            <div slot="header" class="clearfix">
+              <span>Certificate Option</span>
+            </div>
+            <el-button @click="cerInfoEdit=(cerInfoEdit?false:true)">{{
+                cerInfoEdit ? "Edit" : "Cancal"
+              }}
+            </el-button>
+            <el-button v-if="!cerInfoEdit" @click="updateInfo" style="float: left">Update</el-button>
+            <el-button type="danger" @click="dialogVisible = true" style="float: right">Delete</el-button>
+            <el-dialog
+                title="Dangerous operation"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+              <span>This operation is very dangerous, please confirm the operation you want to perform a second time</span>
+              <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisible = false">cancel</el-button>
+    <el-button type="danger" @click="dialogVisible = false">confirm</el-button>
+  </span>
+            </el-dialog>
+          </el-card>
+        </el-col>
         <el-col :lg="12" class="col">
           <el-card>
             <div slot="header" class="clearfix">
@@ -96,30 +120,6 @@
                 placeholder="privateKey"
                 v-model="privateKey">
             </el-input>
-          </el-card>
-        </el-col>
-        <el-col :lg="24" class="col">
-          <el-card>
-            <div slot="header" class="clearfix">
-              <span>Certificate Option</span>
-            </div>
-            <el-button @click="cerInfoEdit=(cerInfoEdit?false:true)">{{
-                cerInfoEdit ? "Edit" : "Cancal"
-              }}
-            </el-button>
-            <el-button v-if="!cerInfoEdit" @click="updateInfo">Update</el-button>
-            <el-button type="danger" @click="dialogVisible = true">Delete</el-button>
-            <el-dialog
-                title="Dangerous operation"
-                :visible.sync="dialogVisible"
-                width="30%"
-                :before-close="handleClose">
-              <span>This operation is very dangerous, please confirm the operation you want to perform a second time</span>
-              <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">cancel</el-button>
-    <el-button type="danger" @click="dialogVisible = false">confirm</el-button>
-  </span>
-            </el-dialog>
           </el-card>
         </el-col>
       </el-row>
