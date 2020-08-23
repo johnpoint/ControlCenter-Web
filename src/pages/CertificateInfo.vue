@@ -40,7 +40,7 @@
               <span>Status</span>
             </div>
             <div class="text item">
-              {{ ((!cerInfo.active ? 'Warning' : 'OK') == 'warning' && cerInfo.isExpires) ? 'Expires' : 'Warning' }}
+              {{  cerInfo.active?"OK":"Warning" }}
             </div>
           </el-card>
         </el-col>
@@ -66,7 +66,7 @@
         </el-col>
       </el-row>
       <el-progress :percentage="cerInfo.percent"
-                   :status="((!cerInfo.active?'warning':'success')=='warning' && cerInfo.isExpires)?'exception':'warning'"></el-progress>
+                   :status="cerInfo.active?'success':'warning'"></el-progress>
       <el-row>
         <el-col :lg="24" class="col">
           <el-card>
@@ -217,6 +217,7 @@ export default {
             type: 'success'
           })
           this.cerInfoEdit = true;
+          this.getInfo()
         }
       }, function (res) {
         this.$notify({
