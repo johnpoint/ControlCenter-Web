@@ -195,7 +195,7 @@ export default {
     },
     updateInfo: function () {
       this.$http.post(config.apiAddress + "/web/Certificate", {
-        name: this.cerInfo.name,
+        id: this.$route.params.id,
         fullchain: this.Fullchain,
         key: this.privateKey
       }, {
