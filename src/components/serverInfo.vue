@@ -150,6 +150,7 @@
 <script>
 import itemList from '@/components/itemList'
 import config from "@/config";
+import router from "@/router";
 
 export default {
   name: "serverInfo",
@@ -228,36 +229,67 @@ export default {
     },
     pushChange: function () {
       let keys = Object.keys(this.clientChange);
-      keys.forEach(key => {
-        if (this.clientChange[key]) {
-          this.$http.post(config.apiAddress + "/web/Server/" + this.$route.params.id + "/Server/" + config.command[key], {}, {
-            headers: {
-              'Authorization': "Bearer " + this.$store.state.jwt,
-              'Accept': 'application/json'
-            }
-          }).then(function (res) {
-            if (res.body.Code != 200) {
-              this.$notify({
-                title: 'Server Warning',
-                message: res.body.Info,
-                type: 'warning'
-              })
-            } else {
-              this.$notify({
-                title: 'Success',
-                message: "Task successfully added",
-                type: 'success'
-              })
-            }
-          }, function (res) {
+      if (this.clientChange.removeServer) {
+        this.$http.delete(config.apiAddress + "/web/Server/" + this.$route.params.id, {
+          headers: {
+            'Authorization': "Bearer " + this.$store.state.jwt,
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          if (res.body.Code != 200) {
             this.$notify({
               title: 'Server Warning',
-              message: res.status,
+              message: res.body.Info,
               type: 'warning'
             })
+          } else {
+            this.$notify({
+              title: 'Success',
+              message: "OK",
+              type: 'success'
+            })
+            router.push("/Server")
+          }
+        }, function (res) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.status,
+            type: 'warning'
           })
-        }
-      })
+        })
+      } else {
+        keys.forEach(key => {
+          if (this.clientChange[key]) {
+            this.$http.post(config.apiAddress + "/web/Server/" + this.$route.params.id + "/Server/" + config.command[key], {}, {
+              headers: {
+                'Authorization': "Bearer " + this.$store.state.jwt,
+                'Accept': 'application/json'
+              }
+            }).then(function (res) {
+              if (res.body.Code != 200) {
+                this.$notify({
+                  title: 'Server Warning',
+                  message: res.body.Info,
+                  type: 'warning'
+                })
+              } else {
+                this.$notify({
+                  title: 'Success',
+                  message: "Task successfully added",
+                  type: 'success'
+                })
+              }
+            }, function (res) {
+              this.$notify({
+                title: 'Server Warning',
+                message: res.status,
+                type: 'warning'
+              })
+            })
+          }
+        })
+      }
+
     },
     getTask: function () {
       this.$http.get(config.apiAddress + "/web/ServerInfo/Task?id=" + this.$route.params.id, {

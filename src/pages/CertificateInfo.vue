@@ -40,7 +40,7 @@
               <span>Status</span>
             </div>
             <div class="text item">
-              {{  cerInfo.active?"OK":"Warning" }}
+              {{ cerInfo.active ? "OK" : "Warning" }}
             </div>
           </el-card>
         </el-col>
@@ -86,8 +86,8 @@
                 :before-close="handleClose">
               <span>This operation is very dangerous, please confirm the operation you want to perform a second time</span>
               <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">cancel</el-button>
-    <el-button type="danger" @click="dialogVisible = false">confirm</el-button>
+    <el-button type="primary" @click="dialogVisible=false">cancel</el-button>
+    <el-button type="danger" @click="dialogVisible=false;delCer()">confirm</el-button>
   </span>
             </el-dialog>
           </el-card>
@@ -130,6 +130,7 @@
 <script>
 import mainLayout from '@/layouts/mainLayout'
 import config from "@/config";
+import router from "@/router";
 
 export default {
   components: {
@@ -156,6 +157,35 @@ export default {
     next()
   },
   methods: {
+    delCer: function () {
+      this.$http.delete(config.apiAddress + "/web/Certificate/" + this.$route.params.id, {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        if (res.body.Code != 200) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.body.Info,
+            type: 'warning'
+          })
+        } else {
+          this.$notify({
+            title: 'Update Success',
+            message: res.body.Info,
+            type: 'success'
+          })
+          router.push("/Certificate")
+        }
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
+    },
     updateTime: function () {
       this.time = new Date().format("yyyy-MM-dd hh:mm:ss");
     },
