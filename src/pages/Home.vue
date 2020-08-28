@@ -10,7 +10,7 @@
                 <span>{{ card.title }}</span>
               </div>
               <div class="text item">
-                {{ card.num }}
+                {{ card.num==0?"-":card.num }}
               </div>
             </el-card>
           </div>
