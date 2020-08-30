@@ -33,7 +33,8 @@ export default {
     return {
       cards: [
         {title: "Server", num: 0},
-        {title: "Certificate", num: 0}
+        {title: "Certificate", num: 0},
+        {title: "Configuration", num: 0}
       ],
       pageName: ["Home"]
     }

@@ -54,6 +54,16 @@ const routes = [
         component: () => import('@/pages/Settings'),
     },
     {
+        path: '/Configuration',
+        name: 'Configuration',
+        component: () => import('@/pages/Configuration')
+    },
+    {
+        path: '/Configuration/:id',
+        name: 'ConfigurationInfo',
+        component: () => import('@/pages/ConfigurationInfo'),
+    },
+    {
         path: '*',
         name: "404 Page",
         component: () => import('@/pages/statusPages/404'),

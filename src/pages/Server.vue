@@ -2,7 +2,23 @@
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
     <el-main>
-      <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
+      <el-card>
+        <el-row>
+          <el-button @click="newServer=(newServer?false:true)" style="float: left" :type="newServer?'':'primary'" plain>
+            {{ newServer ? 'Cancel' : '+1' }}
+          </el-button>
+        </el-row>
+      </el-card>
+      <div v-if="newServer" class="row">
+        <el-card>
+          <code>install {{ apiaddress }} servername `curl ip.sb -4` `curl ip.sb` {{ token }}</code>
+        </el-card>
+      </div>
+      <div v-else class="row">
+        <el-card>
+          <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
+        </el-card>
+      </div>
     </el-main>
   </div>
 </template>
@@ -26,10 +42,16 @@ export default {
       tableData: [],
       timer: null,
       loading: true,
+      newServer: false,
+      installCode: "",
+      apiaddress: config.apiAddress,
+      token: '',
+      nick: '',
     }
   },
   mounted() {
     this.getServer();
+    this.getToken();
     this.timer = setInterval(this.getServer, 3000);
   },
   beforeRouteLeave(to, from, next) {
@@ -37,6 +59,30 @@ export default {
     next();
   },
   methods: {
+    getToken: function () {
+      this.$http.get(config.apiAddress + "/web/UserInfo/Token", {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        if (res.body.Code == 200) {
+          this.token = res.body.Info
+        } else {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.body.Info,
+            type: 'warning'
+          })
+        }
+      }, function () {
+        this.$notify({
+          title: 'Server Warning',
+          message: "登录会话可能已经过期，请尝试重新登录",
+          type: 'warning'
+        })
+      })
+    },
     getServer: function () {
       this.$http.get(config.apiAddress + "/web/ServerInfo", {
         headers: {

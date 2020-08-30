@@ -11,6 +11,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(Vuex);
+
+
 console.log("Powered by ControlCenter-web v1.0.2\nhttps://github.com/johnpoint/ControlCenter-web")
 const store = new Vuex.Store({
     state: {

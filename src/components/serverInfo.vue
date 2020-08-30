@@ -109,6 +109,10 @@
         <item-list :table-data="certificateData" :table-header="certificateTableHeader"
                    :option="tableCertificateOption"></item-list>
       </el-tab-pane>
+      <el-tab-pane label="Configuration" name="Configuration">
+        <item-list :table-data="taskTableData" :table-header="taskTableHeader"
+                   :option="{color:false,view:false}"></item-list>
+      </el-tab-pane>
       <el-tab-pane label="Tasks" name="Tasks">
         <item-list :table-data="taskTableData" :table-header="taskTableHeader"
                    :option="{color:false,view:false}"></item-list>
