@@ -33,10 +33,15 @@ export default {
       username: '',
       userStatus: false,
       activeIndex: this.$route.path,
-      menuList: config.menu,
       loading: false,
       isAdmin: false,
       time: '',
+      menuList: [
+        {title: "Home", url: "/"},
+        {title: "Server", url: "/Server"},
+        {title: "Certificate", url: "/Certificate"},
+        {title: "Configuration", url: "/Configuration"},
+      ],
     };
   },
   mounted() {

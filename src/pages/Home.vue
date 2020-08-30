@@ -10,7 +10,7 @@
                 <span>{{ card.title }}</span>
               </div>
               <div class="text item">
-                {{ card.num==0?"-":card.num }}
+                {{ card.num == 0 ? "-" : card.num }}
               </div>
             </el-card>
           </div>
@@ -42,6 +42,7 @@ export default {
   mounted() {
     this.getServerNum();
     this.getCerNum();
+    this.getConfNum();
   },
   methods: {
     goTo: function (target) {
@@ -71,6 +72,22 @@ export default {
         }
       }).then(function (res) {
         this.cards[1].num = res.body.length
+      }, function () {
+        this.$notify({
+          title: 'Server Warning',
+          message: "登录会话可能已经过期，请尝试重新登录",
+          type: 'warning'
+        })
+      })
+    },
+    getConfNum: function () {
+      this.$http.get(config.apiAddress + "/web/Configuration", {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        this.cards[2].num = res.body.length
       }, function () {
         this.$notify({
           title: 'Server Warning',
