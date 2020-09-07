@@ -37,6 +37,18 @@
             !(tableData[scope.$index].Level >= 1) ? 'Cancel administrator rights' : 'Set asadministrator'
           }}
         </el-button>
+        <el-button
+            v-if="option.configuration"
+            size="mini"
+            :type="(tableData[scope.$index].Level < 1) ? 'danger':'primary'"
+            @click="handleConfiguration(scope.$index)" plain>{{ (tableData[scope.$index].onServer) ? 'Remove' : 'Add' }}
+        </el-button>
+        <el-button
+            v-if="option.configuration"
+            size="mini"
+            @click="handleConfigurationView(scope.$index)"
+            plain>View
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -67,6 +79,12 @@ export default {
     },
     handleView: function (index, row) {
       router.push(this.$route.path + "/" + row.id)
+    },
+    handleConfiguration: function (index) {
+      return index
+    },
+    handleConfigurationView: function (index) {
+      return index
     },
     handleDocker: function (index) {
       let dockerChange = 6200;

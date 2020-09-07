@@ -110,8 +110,8 @@
                    :option="tableCertificateOption"></item-list>
       </el-tab-pane>
       <el-tab-pane label="Configuration" name="Configuration">
-        <item-list :table-data="taskTableData" :table-header="taskTableHeader"
-                   :option="{color:false,view:false}"></item-list>
+        <item-list :table-data="configurationData" :table-header="configurationHeader"
+                   :option="tableConfigurationOption"></item-list>
       </el-tab-pane>
       <el-tab-pane label="Tasks" name="Tasks">
         <item-list :table-data="taskTableData" :table-header="taskTableHeader"
@@ -194,8 +194,10 @@ export default {
       ],
       tableHeaderDocker: ["ID", "Image", "Name", "State", "Port"],
       certificateTableHeader: ["domain", "Issued", "Expires"],
+      configurationHeader: ["ID", "Type", "Name", "Path"],
       tableDockerOption: {docker: true, start: true},
       tableCertificateOption: {certificate: true, color: false},
+      tableConfigurationOption: {configuration: true, color: false},
       secondConfirmDialog: false,
       clientChange: {
         remove: false,
@@ -206,6 +208,7 @@ export default {
       },
       taskTableHeader: ["ID", "Type", "Code", "Info", "Active"],
       taskTableData: [],
+      cnfigurationData: [],
       certificateData: [],
       certificateDataGot: null,
       certificateOnServer: null,
@@ -223,6 +226,7 @@ export default {
     update: function () {
       this.getTask();
       this.getCerList();
+      this.getConfigurationList();
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -293,7 +297,6 @@ export default {
           }
         })
       }
-
     },
     getTask: function () {
       this.$http.get(config.apiAddress + "/web/ServerInfo/Task?id=" + this.$route.params.id, {
@@ -322,6 +325,27 @@ export default {
         })
       })
     },
+    getConfigurationList: function () {
+      this.$http.get(config.apiAddress + '/web/Configuration', {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        },
+      }).then(function (res) {
+        this.configurationData = [];
+        let data = res.body;
+        data.forEach(item => {
+          let i = {
+            ID: item.ID,
+            value: item.value,
+            Name: item.name,
+            Path: item.path,
+            Type: item.type
+          }
+          this.configurationData.push(i)
+        })
+      })
+    },
     getCerList: function () {
       this.$http.get(config.apiAddress + '/web/Certificate', {
         headers: {
@@ -341,7 +365,7 @@ export default {
           this.certificateData = []
           let data2 = res.body;
           data2.forEach(item => {
-            this.certificateOnServer.push(item.CertificateID)
+            this.certificateOnServer.push(item.ItemID)
           })
           for (let i = 0; i < data.length; i++) {
             this.certificateData.push({

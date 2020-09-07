@@ -12,7 +12,7 @@
               {{ confInfo.name }}
             </div>
             <div v-else class="text item">
-              <el-input v-model="confInfo.name"  :disabled="confInfoEdit"></el-input>
+              <el-input v-model="confInfo.name" :disabled="confInfoEdit"></el-input>
             </div>
           </el-card>
         </el-col>
@@ -25,7 +25,7 @@
               {{ confInfo.type }}
             </div>
             <div v-else class="text item">
-              <el-input v-model="confInfo.type"  :disabled="confInfoEdit"></el-input>
+              <el-input v-model="confInfo.type" :disabled="confInfoEdit"></el-input>
             </div>
           </el-card>
         </el-col>
@@ -38,7 +38,7 @@
               {{ confInfo.path }}
             </div>
             <div v-else class="text item">
-              <el-input v-model="confInfo.path"  :disabled="confInfoEdit"></el-input>
+              <el-input v-model="confInfo.path" :disabled="confInfoEdit"></el-input>
             </div>
           </el-card>
         </el-col>
@@ -148,9 +148,6 @@ export default {
         })
       })
     },
-    updateTime: function () {
-      this.time = new Date().format("yyyy-MM-dd hh:mm:ss");
-    },
     getInfo: function () {
       this.$http.get(config.apiAddress + "/web/Configuration?id=" + this.$route.params.id, {
         headers: {
@@ -178,7 +175,7 @@ export default {
       })
     },
     updateInfo: function () {
-      this.$http.post(config.apiAddress + "/web/Certificate", this.confInfo, {
+      this.$http.patch(config.apiAddress + "/web/Configuration/" + this.$route.params.id, this.confInfo, {
         headers: {
           'Authorization': "Bearer " + this.$store.state.jwt,
           'Accept': 'application/json'
@@ -196,7 +193,7 @@ export default {
             message: res.body.Info,
             type: 'success'
           })
-          this.cerInfoEdit = true;
+          this.confInfoEdit = true;
           this.getInfo()
         }
       }, function (res) {
