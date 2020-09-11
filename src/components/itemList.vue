@@ -46,7 +46,7 @@
         <el-button
             v-if="option.configuration"
             size="mini"
-            @click="handleConfigurationView(scope.$index)"
+            @click="handleConfigurationView(scope.$index,scope.row)"
             plain>View
         </el-button>
       </template>
@@ -81,9 +81,63 @@ export default {
       router.push(this.$route.path + "/" + row.id)
     },
     handleConfiguration: function (index) {
+      if (this.tableData[index].onServer) {
+        this.$http.delete(config.apiAddress + "/web/link/Configuration/" + this.$route.params.id + "/" + this.tableData[index].id, {
+          headers: {
+            'Authorization': "Bearer " + this.$store.state.jwt,
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          if (res.body.Code == 200) {
+            this.$notify({
+              title: 'Success',
+              type: 'success'
+            });
+          } else {
+            this.$notify({
+              title: 'Error',
+              type: 'success',
+              message: res.body.Info
+            });
+          }
+        }, function (res) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.status,
+            type: 'warning'
+          })
+        })
+      } else {
+        this.$http.put(config.apiAddress + "/web/link/Configuration/" + this.$route.params.id + "/" + this.tableData[index].ID, {}, {
+          headers: {
+            'Authorization': "Bearer " + this.$store.state.jwt,
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          if (res.body.Code == 200) {
+            this.$notify({
+              title: 'Success',
+              type: 'success'
+            });
+          } else {
+            this.$notify({
+              title: 'Error',
+              type: 'success',
+              message: res.body.Info
+            });
+          }
+        }, function (res) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.status,
+            type: 'warning'
+          })
+        })
+      }
       return index
     },
-    handleConfigurationView: function (index) {
+    handleConfigurationView: function (index, row) {
+      router.push("/Configuration/" + row.ID)
       return index
     },
     handleDocker: function (index) {

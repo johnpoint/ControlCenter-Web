@@ -208,9 +208,11 @@ export default {
       },
       taskTableHeader: ["ID", "Type", "Code", "Info", "Active"],
       taskTableData: [],
-      cnfigurationData: [],
+      configurationData: [],
       certificateData: [],
       certificateDataGot: null,
+      confDataGot: null,
+      confOnServer: [],
       certificateOnServer: null,
       Timer: null,
     };
@@ -332,17 +334,30 @@ export default {
           'Accept': 'application/json'
         },
       }).then(function (res) {
-        this.configurationData = [];
-        let data = res.body;
-        data.forEach(item => {
-          let i = {
-            ID: item.ID,
-            value: item.value,
-            Name: item.name,
-            Path: item.path,
-            Type: item.type
+        this.confDataGot = res.body;
+        this.$http.get(config.apiAddress + '/web/ServerInfo/Configuration?id=' + this.$route.params.id, {
+          headers: {
+            'Authorization': "Bearer " + this.$store.state.jwt,
+            'Accept': 'application/json'
           }
-          this.configurationData.push(i)
+        }).then(function (res) {
+          let data2 = res.body;
+          this.confOnServer = []
+          data2.forEach(item => {
+            this.confOnServer.push(item.ItemID)
+          })
+          let data = this.confDataGot
+          this.configurationData = []
+          data.forEach(item => {
+            let i = {
+              ID: item.ID,
+              Name: item.name,
+              Path: item.path,
+              Type: item.type,
+              onServer: this.confOnServer.indexOf(item.ID) == -1 ? false : true
+            }
+            this.configurationData.push(i)
+          })
         })
       })
     },
@@ -385,8 +400,6 @@ export default {
             type: 'warning'
           })
         })
-
-
       }, function (res) {
         this.$notify({
           title: 'Server Warning',
