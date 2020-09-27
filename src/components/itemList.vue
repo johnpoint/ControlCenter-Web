@@ -40,7 +40,7 @@
         <el-button
             v-if="option.configuration"
             size="mini"
-            :type="(tableData[scope.$index].Level < 1) ? 'danger':'primary'"
+            :type="(tableData[scope.$index].onServer) ? 'danger':'primary'"
             @click="handleConfiguration(scope.$index)" plain>{{ (tableData[scope.$index].onServer) ? 'Remove' : 'Add' }}
         </el-button>
         <el-button
@@ -82,7 +82,7 @@ export default {
     },
     handleConfiguration: function (index) {
       if (this.tableData[index].onServer) {
-        this.$http.delete(config.apiAddress + "/web/link/Configuration/" + this.$route.params.id + "/" + this.tableData[index].id, {
+        this.$http.delete(config.apiAddress + "/web/link/Configuration/" + this.$route.params.id + "/" + this.tableData[index].ID, {
           headers: {
             'Authorization': "Bearer " + this.$store.state.jwt,
             'Accept': 'application/json'
