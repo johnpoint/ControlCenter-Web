@@ -15,9 +15,7 @@
         </el-card>
       </div>
       <div v-else class="row">
-        <el-card>
-          <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
-        </el-card>
+        <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
       </div>
     </el-main>
   </div>
