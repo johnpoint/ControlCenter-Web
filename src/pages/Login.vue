@@ -23,7 +23,6 @@
 
 <script>
 import config from "@/config";
-import router from "@/router";
 
 export default {
   name: "Login",
@@ -54,7 +53,7 @@ export default {
       if (localStorage.getItem("isLogin") === "true") {
         this.$store.commit('setjwt', localStorage.getItem("jwt"))
         this.$store.commit('setStatus', true)
-        router.push("/")
+        window.location.pathname = "/"
       }
     },
     submitForm(name) {
@@ -67,7 +66,7 @@ export default {
           this.$http.post(config.apiAddress + '/user/auth/login', formData,
               {'Content-Type': 'multipart/form-data;charset=utf-8'}).then(function (res) {
             var data = res.body
-            if (data.Code == 200) {
+            if (data.Code === 200) {
               this.$notify({
                 title: 'Success',
                 message: 'Successful login',
@@ -77,7 +76,7 @@ export default {
               this.$store.commit('setStatus', true)
               localStorage.setItem("isLogin", "true")
               localStorage.setItem("jwt", data.Info)
-              router.push("/")
+              window.location.pathname = "/"
             } else {
               this.$notify.error({
                 title: 'Error',

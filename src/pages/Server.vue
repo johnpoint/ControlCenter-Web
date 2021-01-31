@@ -45,11 +45,11 @@ export default {
       apiaddress: config.apiAddress,
       token: '',
       nick: '',
+      requestLock: false,
     }
   },
-  mounted() {
+  beforeMount() {
     this.getServer();
-    this.getToken();
     this.timer = setInterval(this.getServer, 3000);
   },
   beforeRouteLeave(to, from, next) {
@@ -57,59 +57,30 @@ export default {
     next();
   },
   methods: {
-    getToken: function () {
-      this.$http.get(config.apiAddress + "/web/UserInfo/Token", {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
-        }
-      }).then(function (res) {
-        if (res.body.Code == 200) {
-          this.token = res.body.Info
-        } else {
-          this.$notify({
-            title: 'Server Warning',
-            message: res.body.Info,
-            type: 'warning'
-          })
-        }
-      }, function () {
-        this.$notify({
-          title: 'Server Warning',
-          message: "登录会话可能已经过期，请尝试重新登录",
-          type: 'warning'
-        })
-      })
-    },
     getServer: function () {
-      this.$http.get(config.apiAddress + "/web/ServerInfo", {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
+      if (this.requestLock !== true) {
+        this.$socket.send("serverList");
+        this.requestLock = true;
+        this.$socket.onmessage = (data) => {
+          data = JSON.parse(data.data)
+          this.tableData = []
+          for (let i = 0; i < data.length; i++) {
+            var status = JSON.parse(data[i].status)
+            this.tableData.push({
+              id: data[i].ID,
+              ipv4: data[i].ipv4,
+              ipv6: data[i].ipv6,
+              nickName: data[i].hostname,
+              load: status.Load.load1.toFixed(2) + " " + status.Load.load5.toFixed(2) + " " + status.Load.load15.toFixed(2),
+              uptime: comm.timeSwitch(status.Uptime),
+              active: status.BootTime + status.Uptime + 5 - Date.parse(Date()) / 1000 >= 0
+            })
+          }
+          this.loading = false;
+          this.requestLock = false;
         }
-      }).then(function (res) {
-        var data = res.body
-        this.tableData = []
-        for (let i = 0; i < data.length; i++) {
-          var status = JSON.parse(data[i].status)
-          this.tableData.push({
-            id: data[i].ID,
-            ipv4: data[i].ipv4,
-            ipv6: data[i].ipv6,
-            nickName: data[i].hostname,
-            load: status.Load.load1.toFixed(2) + " " + status.Load.load5.toFixed(2) + " " + status.Load.load15.toFixed(2),
-            uptime: comm.timeSwitch(status.Uptime),
-            active: status.BootTime + status.Uptime + 5 - Date.parse(Date()) / 1000 < 0 ? false : true
-          })
-        }
-        this.loading = false;
-      }, function () {
-        this.$notify({
-          title: 'Server Warning',
-          message: "登录会话可能已经过期，请尝试重新登录",
-          type: 'warning'
-        })
-      })
+        delete this.$socket.onmessage;
+      }
     },
   }
 }
