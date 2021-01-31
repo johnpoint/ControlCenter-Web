@@ -67,7 +67,7 @@ export default {
           }
           let addr;
           addr = config.apiAddress.replace("http://", "").replace("https://", "")
-          Vue.use(VueNativeSock, uri + addr + "/api/" + this.token + "/v2");
+          Vue.use(VueNativeSock, uri + addr + "/api/v2/" + this.token);
         } else {
           this.$notify({
             title: 'Server Warning',
