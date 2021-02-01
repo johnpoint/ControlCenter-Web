@@ -55,7 +55,6 @@ export default {
     if (localStorage.getItem("isLogin") === "true") {
       this.$store.commit('setjwt', localStorage.getItem("jwt"))
       this.$store.commit('setStatus', true)
-      // router.push("/")
       this.$http.get(config.apiAddress + "/web/UserInfo/Token", {
         headers: {
           'Authorization': "Bearer " + this.$store.state.jwt,
@@ -69,11 +68,16 @@ export default {
           }
           let addr;
           addr = config.apiAddress.replace("http://", "").replace("https://", "")
+          this.$message('Connecting to API interface');
           const connection = new WebSocket(uri + addr + "/api/v2")
           this.$store.state.ws = connection;
           this.$store.state.ws.onopen = () => {
             this.$store.state.ws.send(res.body.Info);
             this.loaded = true;
+            this.$message({
+              message: 'Connected~',
+              type: 'success'
+            });
           }
           delete this.$store.state.ws.onopen
           this.$store.state.ws.onclose = () => {

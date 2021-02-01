@@ -43,7 +43,7 @@ export default {
   methods: {
     getServer: function () {
       if (this.requestLock !== true) {
-        this.$store.state.ws.send("serverList");
+        this.$store.state.ws.send("get@serverList");
         this.requestLock = true;
         this.$store.state.ws.onmessage = (data) => {
           data = JSON.parse(data.data)

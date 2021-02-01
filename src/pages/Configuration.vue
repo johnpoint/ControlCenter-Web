@@ -11,9 +11,7 @@
       </el-card>
       <newConfiguration v-if="newConf" class="row"/>
       <div v-else class="row">
-        <el-card>
-          <confList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
-        </el-card>
+        <confList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
       </div>
     </el-main>
   </div>
@@ -45,7 +43,7 @@ export default {
   },
   methods: {
     getConf: function () {
-      this.$store.state.ws.send("ConfigurationList");
+      this.$store.state.ws.send("get@ConfigurationList");
       this.$store.state.ws.onmessage = (event) => {
         let data = JSON.parse(event.data);
         this.tableData = []

@@ -11,9 +11,7 @@
       </el-card>
       <newCertificate v-if="newCert" class="row"/>
       <div v-else class="row">
-        <el-card>
-          <cerList :table-header="tableHeader" :table-data="tableData" v-loading="loading"/>
-        </el-card>
+        <cerList :table-header="tableHeader" :table-data="tableData" v-loading="loading"/>
       </div>
     </el-main>
   </div>
@@ -44,7 +42,7 @@ export default {
   },
   methods: {
     getCertificate: function () {
-      this.$store.state.ws.send("CertificateList")
+      this.$store.state.ws.send("get@CertificateList")
       this.$store.state.ws.onmessage = (event) => {
         let data = JSON.parse(event.data)
         this.tableData = []

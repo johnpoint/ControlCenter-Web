@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     getInfo: function () {
-      this.$store.state.ws.send("serverStatus#" + this.$route.params.id);
+      this.$store.state.ws.send("get@serverStatus#" + this.$route.params.id);
       this.requestLock = true;
       this.$store.state.ws.onmessage = (data) => {
         data = JSON.parse(data.data.replace("serverStatus", ""))

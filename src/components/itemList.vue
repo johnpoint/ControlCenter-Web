@@ -19,7 +19,7 @@
         <el-button
             v-if="option.docker"
             size="mini"
-            :type="(tableData[scope.$index].State == 'running') ? 'danger' : 'primary'"
+            :type="(tableData[scope.$index].State === 'running') ? 'danger' : 'primary'"
             @click="handleDocker(scope.$index)" plain>
           {{ (tableData[scope.$index].State == 'running') ? 'Stop' : 'Start' }}
         </el-button>
@@ -88,7 +88,7 @@ export default {
             'Accept': 'application/json'
           }
         }).then(function (res) {
-          if (res.body.Code == 200) {
+          if (res.body.Code === 200) {
             this.$notify({
               title: 'Success',
               type: 'success'
@@ -114,7 +114,7 @@ export default {
             'Accept': 'application/json'
           }
         }).then(function (res) {
-          if (res.body.Code == 200) {
+          if (res.body.Code === 200) {
             this.$notify({
               title: 'Success',
               type: 'success'
@@ -142,7 +142,7 @@ export default {
     },
     handleDocker: function (index) {
       let dockerChange = 6200;
-      if (this.tableData[index].State == "running") {
+      if (this.tableData[index].State === "running") {
         dockerChange = 6202
       } else {
         dockerChange = 6201
@@ -153,7 +153,7 @@ export default {
           'Accept': 'application/json'
         }
       }).then(function (res) {
-        if (res.body.Code == 200) {
+        if (res.body.Code === 200) {
           this.$notify({
             title: 'Success',
             type: 'success'
@@ -187,7 +187,7 @@ export default {
           'Accept': 'application/json'
         }
       }).then(function (res) {
-        if (res.body.Code == 200) {
+        if (res.body.Code === 200) {
           this.$notify({
             title: 'Success',
             type: 'success'
@@ -215,7 +215,7 @@ export default {
             'Accept': 'application/json'
           }
         }).then(function (res) {
-          if (res.body.Code == 200) {
+          if (res.body.Code === 200) {
             this.$notify({
               title: 'Success',
               type: 'success'
@@ -241,7 +241,7 @@ export default {
             'Accept': 'application/json'
           }
         }).then(function (res) {
-          if (res.body.Code == 200) {
+          if (res.body.Code === 200) {
             this.$notify({
               title: 'Success',
               type: 'success'

@@ -46,7 +46,7 @@ export default {
       router.push("/" + target)
     },
     getOverView: function () {
-      this.$store.state.ws.send("overView");
+      this.$store.state.ws.send("get@overView");
       this.$store.state.ws.onmessage = (data) => {
         data = JSON.parse(data.data)
         this.cards[0].num = data["Server"]
