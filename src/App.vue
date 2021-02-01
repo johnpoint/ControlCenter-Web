@@ -76,6 +76,9 @@ export default {
             this.loaded = true;
           }
           delete this.$store.state.ws.onopen
+          this.$store.state.ws.onclose = () => {
+            window.location.reload();
+          }
         } else {
           this.$notify({
             title: 'Server Warning',
