@@ -9,7 +9,7 @@
           </el-button>
         </el-row>
       </el-card>
-          <newConfiguration v-if="newConf" class="row"/>
+      <newConfiguration v-if="newConf" class="row"/>
       <div v-else class="row">
         <el-card>
           <confList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
@@ -21,7 +21,6 @@
 
 <script>
 import mainLayout from '@/layouts/mainLayout'
-import config from "@/config";
 import confList from '@/components/itemList'
 import newConfiguration from "@/components/newConfiguration";
 
@@ -37,7 +36,7 @@ export default {
       tableOption: {view: true},
       tableHeader: ["id", "Type", "Name", "Path"],
       newConf: false,
-      tableData: null,
+      tableData: [],
       loading: true,
     }
   },
@@ -46,30 +45,21 @@ export default {
   },
   methods: {
     getConf: function () {
-      this.$http.get(config.apiAddress + "/web/Configuration", {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
-        }
-      }).then(function (res) {
-        var data = res.body
+      this.$store.state.ws.send("ConfigurationList");
+      this.$store.state.ws.onmessage = (event) => {
+        let data = JSON.parse(event.data);
         this.tableData = []
-        for (let i = 0; i < data.length; i++) {
-          this.tableData.push({
-            id: data[i].ID,
-            Type: data[i].type,
-            Name: data[i].name,
-            Path: data[i].path
-          })
-        }
-        this.loading = false
-      }, function () {
-        this.$notify({
-          title: 'Server Warning',
-          message: "登录会话可能已经过期，请尝试重新登录",
-          type: 'warning'
+        data.forEach(item => {
+          let i = {
+            id: item.ID,
+            Type: item.Type,
+            Name: item.Name,
+            Path: item.Path
+          }
+          this.tableData.push(i)
         })
-      })
+        this.loading = false
+      }
     }
   }
 }

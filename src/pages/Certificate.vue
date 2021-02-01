@@ -22,7 +22,6 @@
 <script>
 import mainLayout from '@/layouts/mainLayout'
 import cerList from '@/components/itemList'
-import config from "@/config";
 import newCertificate from "@/components/newCertificate";
 
 export default {
@@ -45,32 +44,23 @@ export default {
   },
   methods: {
     getCertificate: function () {
-      this.$http.get(config.apiAddress + "/web/Certificate", {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
-        }
-      }).then(function (res) {
-        var data = res.body
+      this.$store.state.ws.send("CertificateList")
+      this.$store.state.ws.onmessage = (event) => {
+        let data = JSON.parse(event.data)
         this.tableData = []
-        for (let i = 0; i < data.length; i++) {
-          this.tableData.push({
-            id: data[i].id,
-            domain: data[i].DNSNames,
-            Issuer: data[i].Issuer,
-            Expires: new Date(data[i].NotAfter * 1000).format("yyyy-MM-dd hh:mm:ss"),
-            Issued: new Date(data[i].NotBefore * 1000).format("yyyy-MM-dd hh:mm:ss"),
-            active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true
-          })
-        }
-        this.loading = false
-      }, function () {
-        this.$notify({
-          title: 'Server Warning',
-          message: "登录会话可能已经过期，请尝试重新登录",
-          type: 'warning'
+        data.forEach(item => {
+          let i = {
+            id: item.ID,
+            domain: item.DNSNames,
+            Issuer: item.Issuer,
+            Expires: new Date(item.NotAfter * 1000).format("yyyy-MM-dd hh:mm:ss"),
+            Issued: new Date(item.NotBefore * 1000).format("yyyy-MM-dd hh:mm:ss"),
+            active: parseInt(((Date.parse(new Date()) / 1000 - item.NotBefore / (item.NotAfter - item.NotBefore)) * 100)) < 80
+          }
+          this.tableData.push(i)
         })
-      })
+        this.loading = false
+      }
     }
   }
 }
