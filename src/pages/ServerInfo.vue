@@ -100,13 +100,8 @@ export default {
         this.loading = false;
         this.requestLock = false;
         this.fullscreenLoading = false
-      }, function (res) {
-        this.$notify({
-          title: 'Server Warning',
-          message: res.status,
-          type: 'warning'
-        })
-      })
+      }
+      delete this.$socket.onmessage;
     },
   }
 }
