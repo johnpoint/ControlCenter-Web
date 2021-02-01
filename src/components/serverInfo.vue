@@ -182,6 +182,9 @@ export default {
         status: {DockerInfo: [], Network: {}}
       }]
     },
+    taskTableData: [],
+    configurationData: [],
+    certificateData: []
   },
   data() {
     return {
@@ -207,9 +210,6 @@ export default {
         upgrade: false,
       },
       taskTableHeader: ["ID", "Type", "Code", "Info", "Active"],
-      taskTableData: [],
-      configurationData: [],
-      certificateData: [],
       certificateDataGot: null,
       confDataGot: null,
       confOnServer: [],
@@ -217,24 +217,23 @@ export default {
       Timer: null,
     };
   },
-  mounted() {
-    this.update();
-    this.Timer = setInterval(this.update, 5000)
-  },
   beforeDestroy() {
     window.clearInterval(this.Timer)
   },
   methods: {
-    update: function () {
-      this.getTask();
-      this.getCerList();
-      this.getConfigurationList();
-    },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    openTerminal: function () {
+      this.$http.post(config.apiAddress + "/web/Server/" + this.$route.params.id + "/Terminal/7201", {}, {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        console.log(res.body);
+      }, function (res) {
+        console.log(res.body);
+      })
     },
     handleClose() {
-      this.stopServer = false;
       this.removeServer = false
     },
     pushChange: function () {
@@ -276,7 +275,7 @@ export default {
                 'Accept': 'application/json'
               }
             }).then(function (res) {
-              if (res.body.Code != 200) {
+              if (res.body.Code !== 200) {
                 this.$notify({
                   title: 'Server Warning',
                   message: res.body.Info,
@@ -299,114 +298,6 @@ export default {
           }
         })
       }
-    },
-    getTask: function () {
-      this.$http.get(config.apiAddress + "/web/ServerInfo/Task?id=" + this.$route.params.id, {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
-        }
-      }).then(function (res) {
-        let data = res.body
-        this.taskTableData = [];
-        data.forEach(item => {
-          this.taskTableData.push({
-            ID: item.ID,
-            Type: item.Type != 1 ? 'Docker' : 'Client',
-            TargetID: item.TargetID,
-            Code: item.Code,
-            Info: item.Info,
-            Active: item.Active == 1 ? "队列中" : "未激活",
-          })
-        })
-      }, function (res) {
-        this.$notify({
-          title: 'Server Warning',
-          message: res.status,
-          type: 'warning'
-        })
-      })
-    },
-    getConfigurationList: function () {
-      this.$http.get(config.apiAddress + '/web/Configuration', {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
-        },
-      }).then(function (res) {
-        this.confDataGot = res.body;
-        this.$http.get(config.apiAddress + '/web/ServerInfo/Configuration?id=' + this.$route.params.id, {
-          headers: {
-            'Authorization': "Bearer " + this.$store.state.jwt,
-            'Accept': 'application/json'
-          }
-        }).then(function (res) {
-          let data2 = res.body;
-          this.confOnServer = []
-          data2.forEach(item => {
-            this.confOnServer.push(item.ItemID)
-          })
-          let data = this.confDataGot
-          this.configurationData = []
-          data.forEach(item => {
-            let i = {
-              ID: item.ID,
-              Name: item.name,
-              Path: item.path,
-              Type: item.type,
-              onServer: this.confOnServer.indexOf(item.ID) == -1 ? false : true
-            }
-            this.configurationData.push(i)
-          })
-        })
-      })
-    },
-    getCerList: function () {
-      this.$http.get(config.apiAddress + '/web/Certificate', {
-        headers: {
-          'Authorization': "Bearer " + this.$store.state.jwt,
-          'Accept': 'application/json'
-        },
-      }).then(function (res) {
-        this.certificateDataGot = res.body;
-        this.$http.get(config.apiAddress + '/web/ServerInfo/Certificate?id=' + this.$route.params.id, {
-          headers: {
-            'Authorization': "Bearer " + this.$store.state.jwt,
-            'Accept': 'application/json'
-          }
-        }).then(function (res) {
-          let data = this.certificateDataGot;
-          this.certificateOnServer = []
-          this.certificateData = []
-          let data2 = res.body;
-          data2.forEach(item => {
-            this.certificateOnServer.push(item.ItemID)
-          })
-          for (let i = 0; i < data.length; i++) {
-            this.certificateData.push({
-              id: data[i].id,
-              domain: data[i].DNSNames,
-              Issuer: data[i].Issuer,
-              Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + new Date(data[i].NotAfter * 1000).getMonth() + "-" + new Date(data[i].NotAfter * 1000).getDate(),
-              Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + new Date(data[i].NotBefore * 1000).getMonth() + "-" + new Date(data[i].NotBefore * 1000).getDate(),
-              active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true,
-              onServer: this.certificateOnServer.indexOf(data[i].id) != -1
-            })
-          }
-        }, function (res) {
-          this.$notify({
-            title: 'Server Warning',
-            message: res.status,
-            type: 'warning'
-          })
-        })
-      }, function (res) {
-        this.$notify({
-          title: 'Server Warning',
-          message: res.status,
-          type: 'warning'
-        })
-      })
     },
   }
 }

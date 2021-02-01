@@ -1,23 +1,7 @@
 <template>
   <div class="server">
     <mainLayout :router="pageName"></mainLayout>
-    <el-main>
-      <el-card>
-        <el-row>
-          <el-button @click="newServer=(newServer?false:true)" style="float: left" :type="newServer?'':'primary'" plain>
-            {{ newServer ? 'Cancel' : '+1' }}
-          </el-button>
-        </el-row>
-      </el-card>
-      <div v-if="newServer" class="row">
-        <el-card>
-          <code>install {{ apiaddress }} servername `curl ip.sb -4` `curl ip.sb` {{ token }}</code>
-        </el-card>
-      </div>
-      <div v-else class="row">
-        <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
-      </div>
-    </el-main>
+    <serverList :table-header="tableHeader" :table-data="tableData" :option="tableOption" v-loading="loading"/>
   </div>
 </template>
 
@@ -48,7 +32,7 @@ export default {
       requestLock: false,
     }
   },
-  beforeMount() {
+  mounted() {
     this.getServer();
     this.timer = setInterval(this.getServer, 3000);
   },
@@ -65,7 +49,7 @@ export default {
           data = JSON.parse(data.data)
           this.tableData = []
           for (let i = 0; i < data.length; i++) {
-            var status = JSON.parse(data[i].status)
+            const status = JSON.parse(data[i].status);
             this.tableData.push({
               id: data[i].ID,
               ipv4: data[i].ipv4,

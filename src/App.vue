@@ -2,7 +2,7 @@
   <div>
     <topMenu v-if="$route.path!='/Login'"/>
     <div id="app" class="main">
-      <router-view class="main-view"/>
+      <router-view v-if="loaded" class="main-view"/>
     </div>
   </div>
 </template>
@@ -21,8 +21,6 @@
 import topMenu from '@/components/topMenu'
 import config from "@/config";
 import router from "@/router";
-import VueNativeSock from 'vue-native-websocket'
-import Vue from "vue";
 
 Date.prototype.format = function (fmt) {
   const o = {
@@ -48,11 +46,16 @@ export default {
   components: {
     topMenu
   },
-  created() {
+  data() {
+    return {
+      loaded: false
+    }
+  },
+  mounted() {
     if (localStorage.getItem("isLogin") === "true") {
       this.$store.commit('setjwt', localStorage.getItem("jwt"))
       this.$store.commit('setStatus', true)
-      router.push("/")
+      // router.push("/")
       this.$http.get(config.apiAddress + "/web/UserInfo/Token", {
         headers: {
           'Authorization': "Bearer " + this.$store.state.jwt,
@@ -60,14 +63,8 @@ export default {
         }
       }).then(function (res) {
         if (res.body.Code === 200) {
-          this.token = res.body.Info
-          let uri = 'ws://';
-          if (window.location.protocol === 'https:') {
-            uri = 'wss://';
-          }
-          let addr;
-          addr = config.apiAddress.replace("http://", "").replace("https://", "")
-          Vue.use(VueNativeSock, uri + addr + "/api/v2/" + this.token);
+          this.$socket.send(res.body.Info);
+          this.loaded = true;
         } else {
           this.$notify({
             title: 'Server Warning',
