@@ -45,9 +45,9 @@ export default {
   },
   methods: {
     getInfo: function () {
-      this.$socket.send("serverStatus#" + this.$route.params.id);
+      this.$store.state.ws.send("serverStatus#" + this.$route.params.id);
       this.requestLock = true;
-      this.$socket.onmessage = (data) => {
+      this.$store.state.ws.onmessage = (data) => {
         data = JSON.parse(data.data.replace("serverStatus", ""))
         let server = data.Server
         this.beforeinfo = this.info
@@ -101,7 +101,7 @@ export default {
         this.requestLock = false;
         this.fullscreenLoading = false
       }
-      delete this.$socket.onmessage;
+      delete this.$store.state.ws.onmessage;
     },
   }
 }

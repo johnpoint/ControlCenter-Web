@@ -46,14 +46,14 @@ export default {
       router.push("/" + target)
     },
     getOverView: function () {
-      this.$socket.send("overView");
-      this.$socket.onmessage = (data) => {
+      this.$store.state.ws.send("overView");
+      this.$store.state.ws.onmessage = (data) => {
         data = JSON.parse(data.data)
         this.cards[0].num = data["Server"]
         this.cards[1].num = data["Certificate"]
         this.cards[2].num = data["Configuration"]
       }
-      delete this.$socket.onmessage;
+      delete this.$store.state.ws.onmessage;
     },
   }
 }

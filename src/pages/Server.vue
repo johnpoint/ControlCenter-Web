@@ -43,9 +43,9 @@ export default {
   methods: {
     getServer: function () {
       if (this.requestLock !== true) {
-        this.$socket.send("serverList");
+        this.$store.state.ws.send("serverList");
         this.requestLock = true;
-        this.$socket.onmessage = (data) => {
+        this.$store.state.ws.onmessage = (data) => {
           data = JSON.parse(data.data)
           this.tableData = []
           for (let i = 0; i < data.length; i++) {
@@ -63,7 +63,7 @@ export default {
           this.loading = false;
           this.requestLock = false;
         }
-        delete this.$socket.onmessage;
+        delete this.$store.state.ws.onmessage;
       }
     },
   }

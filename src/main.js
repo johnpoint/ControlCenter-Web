@@ -6,21 +6,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/main.css';
 import router from "./router";
 import App from './App';
-import config from "@/config";
-import VueNativeSock from "vue-native-websocket";
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(Vuex);
-let uri = 'ws://';
-if (window.location.protocol === 'https:') {
-    uri = 'wss://';
-}
-let addr;
-addr = config.apiAddress.replace("http://", "").replace("https://", "")
-console.log(this)
-Vue.use(VueNativeSock, uri + addr + "/api/v2");
 
 console.log("Powered by ControlCenter-web v1.0.2\nhttps://github.com/johnpoint/ControlCenter-web")
 const store = new Vuex.Store({
@@ -28,6 +18,7 @@ const store = new Vuex.Store({
         jwt: '',
         isLogin: false,
         userInfo: null,
+        ws:null
     },
     mutations: {
         setjwt(state, jwt) {
