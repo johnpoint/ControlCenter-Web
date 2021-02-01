@@ -70,10 +70,8 @@ export default {
           let addr;
           addr = config.apiAddress.replace("http://", "").replace("https://", "")
           const connection = new WebSocket(uri + addr + "/api/v2")
-          this.$socket = connection;
-          this.$store.state.ws=connection;
-          console.log(connection)
-          this.$store.state.ws.onopen = (data) => {
+          this.$store.state.ws = connection;
+          this.$store.state.ws.onopen = () => {
             this.$store.state.ws.send(res.body.Info);
             this.loaded = true;
           }
