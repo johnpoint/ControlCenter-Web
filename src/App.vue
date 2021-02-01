@@ -80,6 +80,7 @@ export default {
         })
       })
     } else {
+      this.loaded = true
       router.push("/login")
     }
   }
