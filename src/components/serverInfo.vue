@@ -126,6 +126,7 @@
               </div>
               <p>Client Version: {{ info.status.Version }}</p>
               <el-button @click="clientChange.upgrade=true;pushChange()">Upgrade</el-button>
+              <el-button @click="openTerminal">Terminal</el-button>
               <el-button @click="clientChange.sync=true;pushChange()">Sync Data</el-button>
               <el-button @click="clientChange.restart=true;pushChange()" type="warning">Restart</el-button>
               <el-button type="danger" @click="secondConfirmDialog=true;clientChange.stop=true;">Stop
