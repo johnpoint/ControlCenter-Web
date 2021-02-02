@@ -105,7 +105,7 @@
         <itemList :table-header="tableHeaderDocker" :table-data="this.info.status.DockerInfo"
                   :option="tableDockerOption"/>
       </el-tab-pane>
-      <el-tab-pane label="Ps" name="Ps">
+      <el-tab-pane label="Process" name="Process">
         <itemList :table-header="psHeader" :table-data="psData"
                   :option="{color:false,view:false}"/>
       </el-tab-pane>
