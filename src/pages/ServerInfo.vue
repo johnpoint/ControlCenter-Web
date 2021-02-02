@@ -5,7 +5,7 @@
       <serverInfo :info="info" :beforeinfo="beforeinfo" :certificate-data="certificateData"
                   :certificate-on-server="certificateOnServer" :certificateData="certificateData"
                   :configurationData="configurationData"
-                  :taskTableData="taskTableData"
+                  :taskTableData="taskTableData" :psData="psData"
                   v-if="info && beforeinfo"/>
     </el-main>
   </div>
@@ -32,6 +32,7 @@ export default {
       certificateOnServer: [],
       taskTableData: [],
       configurationData: [],
+      psData: []
     }
   },
   created() {
@@ -51,6 +52,22 @@ export default {
         data = JSON.parse(data.data.replace("serverStatus", ""))
         let server = data.Server
         this.beforeinfo = this.info
+        let ps = server.Ps.split('\n')
+        this.psData = [];
+        ps.forEach(item => {
+          if (item.split(" ").length > 3) {
+            item = item.split(" ")
+            let i = {
+              PID: item[1],
+              User: item[2],
+              State: item[3],
+              Pcpu: item[4],
+              Pmem: item[5],
+              Command: item.slice(6, item.length).toString().replaceAll(",", " "),
+            }
+            this.psData.push(i)
+          }
+        })
         let status = JSON.parse(server.status)
         this.info = {
           id: server.ID,

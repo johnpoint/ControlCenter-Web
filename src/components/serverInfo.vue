@@ -105,6 +105,10 @@
         <itemList :table-header="tableHeaderDocker" :table-data="this.info.status.DockerInfo"
                   :option="tableDockerOption"/>
       </el-tab-pane>
+      <el-tab-pane label="Ps" name="Ps">
+        <itemList :table-header="psHeader" :table-data="psData"
+                  :option="{color:false,view:false}"/>
+      </el-tab-pane>
       <el-tab-pane label="Certificate" name="Certificate">
         <item-list :table-data="certificateData" :table-header="certificateTableHeader"
                    :option="tableCertificateOption"></item-list>
@@ -185,7 +189,8 @@ export default {
     },
     taskTableData: [],
     configurationData: [],
-    certificateData: []
+    certificateData: [],
+    psData: []
   },
   data() {
     return {
@@ -199,6 +204,7 @@ export default {
       tableHeaderDocker: ["ID", "Image", "Name", "State", "Port"],
       certificateTableHeader: ["domain", "Issued", "Expires"],
       configurationHeader: ["ID", "Type", "Name", "Path"],
+      psHeader: ["PID", "User", "State", "Pcpu", "Pmem", "Command"],
       tableDockerOption: {docker: true, start: true},
       tableCertificateOption: {certificate: true, color: false},
       tableConfigurationOption: {configuration: true, color: false},

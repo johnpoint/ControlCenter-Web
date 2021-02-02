@@ -81,7 +81,8 @@ export default {
           }
           delete this.$store.state.ws.onopen
           this.$store.state.ws.onclose = () => {
-            window.location.reload();
+            // window.location.reload();
+            this.$message.error('API interface cannot be connected');
           }
         } else {
           this.$notify({
