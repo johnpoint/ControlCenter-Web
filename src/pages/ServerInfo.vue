@@ -57,13 +57,16 @@ export default {
         ps.forEach(item => {
           if (item.split(" ").length > 3) {
             item = item.split(" ")
+            if (item[0] === "") {
+              item = item.slice(1, item.length)
+            }
             let i = {
-              PID: item[1],
-              User: item[2],
-              State: item[3],
-              Pcpu: item[4],
-              Pmem: item[5],
-              Command: item.slice(6, item.length).toString().replaceAll(",", " "),
+              PID: item[0],
+              User: item[1],
+              State: item[2],
+              Pcpu: item[3],
+              Pmem: item[4],
+              Command: item.slice(5, item.length).toString().replaceAll(",", " "),
             }
             this.psData.push(i)
           }
