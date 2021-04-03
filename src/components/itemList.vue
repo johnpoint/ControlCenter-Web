@@ -12,6 +12,12 @@
     <el-table-column label="option">
       <template slot-scope="scope">
         <el-button
+            v-if="option.kill"
+            size="mini"
+            type="danger"
+            @click="handleKill(scope.$index, scope.row)" plain>KILL
+        </el-button>
+        <el-button
             v-if="option.view"
             size="mini"
             @click="handleView(scope.$index, scope.row)">View

@@ -1,68 +1,67 @@
 <template>
   <div>
-    <el-card>
-      <div slot="header" class="clearfix">
-        <span>Overview</span>
-      </div>
-      <el-row class="row">
-        <el-col :lg="6" :xs="24">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>IPv4</span>
-            </div>
-            <div class="text item">
-              {{ info.ipv4 }}
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :lg="6" :xs="24">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>IPv6</span>
-            </div>
-            <div class="text item">
-              {{ info.ipv6 == info.ipv4 ? "None" : info.ipv6 }}
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :lg="6" :xs="24">
-          <el-card class="box-card" v-loading="!info.active" element-loading-text="Waiting to be back online">
-            <div slot="header" class="clearfix">
-              <span>Uptime</span>
-            </div>
-            <div class="text item">
-              {{ info.uptime }}
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :lg="6" :xs="24" v-loading="!info.active" element-loading-text="Waiting to be back online">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>Load</span>
-            </div>
-            <div class="text item">
-              {{ info.load }}
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-progress :percentage="100" :status="!info.active?'exception':'success'"></el-progress>
-      <el-row class="row" v-loading="!info.active" element-loading-text="Waiting to be back online">
-        <el-col :lg="6" v-for="i in Object.keys(info.status.Percent)" :key="i">
-          <el-card class="box-card" shadow="hover">
-            <el-progress type="circle" :percentage="parseInt(info.status.Percent[i])" :show-text="true"
-                         :color="colors"></el-progress>
-            <div class="text item">
-              {{ i }}
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div slot="header" class="clearfix">
+      <span>Overview</span>
+    </div>
+    <el-row class="row">
+      <el-col :lg="6" :md="6" :sm="6" :xs="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>IPv4</span>
+          </div>
+          <div class="text item">
+            {{ info.ipv4 }}
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :lg="6" :md="6" :sm="6" :xs="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>IPv6</span>
+          </div>
+          <div class="text item">
+            {{ info.ipv6 == info.ipv4 ? "None" : info.ipv6 }}
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :lg="6" :md="6" :sm="6" :xs="12">
+        <el-card class="box-card" v-loading="!info.active" element-loading-text="Waiting to be back online">
+          <div slot="header" class="clearfix">
+            <span>Uptime</span>
+          </div>
+          <div class="text item">
+            {{ info.uptime }}
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :lg="6" :md="6" :sm="6" :xs="12" v-loading="!info.active" element-loading-text="Waiting to be back online">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>Load</span>
+          </div>
+          <div class="text item">
+            {{ info.load }}
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-progress :percentage="100" :status="!info.active?'exception':'success'"></el-progress>
+    <el-row class="row" v-loading="!info.active" element-loading-text="Waiting to be back online">
+      <el-col :lg="6" :xs="12" :sm="6" :md="6" v-for="i in Object.keys(info.status.Percent)" :key="i">
+        <el-card class="box-card" shadow="hover">
+          <el-progress type="circle" :percentage="parseInt(info.status.Percent[i])" :show-text="true"
+                       :color="colors"></el-progress>
+          <div class="text item">
+            {{ i }}
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
     <el-tabs v-model="activeName" v-if="info && beforeinfo" class="row">
       <el-tab-pane label="Network" name="Network">
         <el-row class="row">
-          <el-col :lg="6" :xm="8" v-for="key in Object.keys(info.status.Network)" :key="key" class="networkCard">
+          <el-col :lg="6" :xm="8" :sm="6" :md="6" v-for="key in Object.keys(info.status.Network)" :key="key"
+                  class="networkCard">
             <el-card class="box-card"
                      :shadow="((((info.status.Network[key]['ByteRecv']-beforeinfo.status.Network[key]['ByteRecv']) / 1048576/3).toFixed(2)!=0) || (((info.status.Network[key]['ByteSent']-beforeinfo.status.Network[key]['ByteSent']) / 1048576/3).toFixed(2)!=0))?'always':'hover'">
               <div slot="header" class="clearfix">
@@ -107,7 +106,7 @@
       </el-tab-pane>
       <el-tab-pane label="Process" name="Process">
         <itemList :table-header="psHeader" :table-data="psData"
-                  :option="{color:false,view:false}"/>
+                  :option="{color:false,view:false,kill:true}"/>
       </el-tab-pane>
       <el-tab-pane label="Certificate" name="Certificate">
         <item-list :table-data="certificateData" :table-header="certificateTableHeader"

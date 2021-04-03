@@ -52,6 +52,42 @@ export default {
     }
   },
   mounted() {
+
+    let lock = 0;
+
+    function connWS(token, v) {
+      if (lock == 1) {
+        return
+      }
+      lock = 1;
+      let uri = 'ws://';
+      if (window.location.protocol === 'https:') {
+        uri = 'wss://';
+      }
+      let addr;
+      addr = config.apiAddress.replace("http://", "").replace("https://", "")
+      v.$message.info('Connecting to API interface');
+      const connection = new WebSocket(uri + addr + "/api/v2")
+      v.$store.state.ws = connection;
+      v.$store.state.ws.onopen = () => {
+        v.$store.state.ws.send(token);
+        v.loaded = true;
+        v.$message({
+          message: 'Connected~',
+          type: 'success'
+        });
+        lock = 0;
+        delete v.$store.state.ws.onopen
+      }
+
+      v.$store.state.ws.onclose = function () {
+        console.log("close")
+        lock = 0;
+        delete v.$store.state.ws.onclose;
+        setTimeout(connWS(token, v),5000)
+      }
+    }
+
     if (localStorage.getItem("isLogin") === "true") {
       this.$store.commit('setjwt', localStorage.getItem("jwt"))
       this.$store.commit('setStatus', true)
@@ -62,28 +98,7 @@ export default {
         }
       }).then(function (res) {
         if (res.body.Code === 200) {
-          let uri = 'ws://';
-          if (window.location.protocol === 'https:') {
-            uri = 'wss://';
-          }
-          let addr;
-          addr = config.apiAddress.replace("http://", "").replace("https://", "")
-          this.$message('Connecting to API interface');
-          const connection = new WebSocket(uri + addr + "/api/v2")
-          this.$store.state.ws = connection;
-          this.$store.state.ws.onopen = () => {
-            this.$store.state.ws.send(res.body.Info);
-            this.loaded = true;
-            this.$message({
-              message: 'Connected~',
-              type: 'success'
-            });
-          }
-          delete this.$store.state.ws.onopen
-          this.$store.state.ws.onclose = () => {
-            // window.location.reload();
-            this.$message.error('API interface cannot be connected');
-          }
+          connWS(res.body.Info, this)
         } else {
           this.$notify({
             title: 'Server Warning',
