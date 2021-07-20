@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     goHome: function () {
-      router.push({path: '/'})
+      router.push({path: '/Login'})
     }
   }
 }
@@ -28,7 +28,7 @@ export default {
   text-align: center;
   position: absolute;
   top: 40%;
-  width: 100%;
+  width: 50%;
 }
 .subtitle{
   color: #909399;
