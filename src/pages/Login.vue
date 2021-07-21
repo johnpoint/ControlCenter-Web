@@ -108,8 +108,6 @@ export default {
 .login {
   top: 30%;
   position: absolute;
-  width: 100%;
-  height: 740px;
   background-size: cover;
   overflow: hidden;
 }
