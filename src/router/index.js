@@ -91,7 +91,38 @@ const routes = [{
             import ('@/pages/statusPages/404'),
     }
 ]
-
+router.beforeEach((to, from, next) => {
+    if (localStorage.getItem("isLogin") === "true") {
+        this.$store.commit('setjwt', localStorage.getItem("jwt"))
+        this.$store.commit('setStatus', true)
+        this.$http.get(config.apiAddress + "/web/UserInfo/Token", {
+            headers: {
+                'Authorization': "Bearer " + this.$store.state.jwt,
+                'Accept': 'application/json'
+            }
+        }).then(function(res) {
+            if (res.body.Code === 200) {
+                connWS(res.body.Info, this)
+            } else {
+                this.$notify({
+                    title: 'Server Warning',
+                    message: res.body.Info,
+                    type: 'warning'
+                })
+            }
+        }, function() {
+            this.$notify({
+                title: 'Server Warning',
+                message: "登录会话可能已经过期，请尝试重新登录",
+                type: 'warning'
+            })
+        })
+    } else {
+        this.loaded = true
+        router.push("/403")
+    }
+    next();
+})
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
