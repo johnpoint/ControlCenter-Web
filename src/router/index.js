@@ -99,6 +99,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    arr = ["/Login", "/403"]
+    if (arr.indexOf(router.path) != -1) {
+        next();
+        return
+    }
     if (localStorage.getItem("isLogin") === "true") {
         this.$store.commit('setjwt', localStorage.getItem("jwt"))
         this.$store.commit('setStatus', true)
