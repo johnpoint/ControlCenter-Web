@@ -101,15 +101,7 @@ router.beforeEach((to, from, next) => {
                 'Accept': 'application/json'
             }
         }).then(function(res) {
-            if (res.body.Code === 200) {
-                connWS(res.body.Info, this)
-            } else {
-                this.$notify({
-                    title: 'Server Warning',
-                    message: res.body.Info,
-                    type: 'warning'
-                })
-            }
+            console.log("checkLogin Success")
         }, function() {
             this.$notify({
                 title: 'Server Warning',
@@ -118,7 +110,6 @@ router.beforeEach((to, from, next) => {
             })
         })
     } else {
-        this.loaded = true
         router.push("/403")
     }
     next();
