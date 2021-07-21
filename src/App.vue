@@ -1,8 +1,8 @@
 <template>
   <div>
-    <topMenu v-if="$route.path!='/Login'"/>
+    <topMenu v-if="$route.path!='/Login' && $route.path!='/403'"/>
     <div id="app" class="main">
-      <router-view v-if="loaded" class="main-view"/>
+      <router-view v-if="loaded" :key="viewkey" class="main-view"/>
     </div>
   </div>
 </template>
