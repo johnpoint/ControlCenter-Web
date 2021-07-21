@@ -113,7 +113,6 @@ export default {
           type: 'warning'
         })
       })
-      router.push("/Login")
     } else {
       this.loaded = true
       router.push("/403")
