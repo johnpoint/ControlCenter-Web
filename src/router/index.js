@@ -99,7 +99,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    arr = ["/Login", "/403"]
+    let arr = ["/Login", "/403"]
     if (arr.indexOf(router.path) != -1) {
         next();
         return
