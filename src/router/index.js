@@ -100,7 +100,7 @@ router.beforeEach((to, from, next) => {
                 'Authorization': "Bearer " + this.$store.state.jwt,
                 'Accept': 'application/json'
             }
-        }).then(function(res) {
+        }).then(function() {
             console.log("checkLogin Success")
         }, function() {
             this.$notify({
