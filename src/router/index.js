@@ -121,8 +121,9 @@ router.beforeEach((to, from, next) => {
                 type: 'warning'
             })
         })
+        next({ "name": "/403" })
     } else {
-        router.push("/403")
+        next({ "name": "/403" })
     }
     next();
 })
