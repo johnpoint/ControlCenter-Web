@@ -98,34 +98,4 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    let arr = ["/Login", "/403"]
-    if (arr.indexOf(router.path) != -1) {
-        next();
-        return
-    }
-    if (localStorage.getItem("isLogin") === "true") {
-        this.$store.commit('setjwt', localStorage.getItem("jwt"))
-        this.$store.commit('setStatus', true)
-        this.$http.get(config.apiAddress + "/web/UserInfo/Token", {
-            headers: {
-                'Authorization': "Bearer " + this.$store.state.jwt,
-                'Accept': 'application/json'
-            }
-        }).then(function() {
-            console.log("checkLogin Success")
-        }, function() {
-            this.$notify({
-                title: 'Server Warning',
-                message: "登录会话可能已经过期，请尝试重新登录",
-                type: 'warning'
-            })
-        })
-        next({ "name": "/403" })
-    } else {
-        next({ "name": "/403" })
-    }
-    next();
-})
-
 export default router
