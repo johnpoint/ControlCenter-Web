@@ -91,6 +91,13 @@ const routes = [{
             import ('@/pages/statusPages/404'),
     }
 ]
+
+const router = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
+})
+
 router.beforeEach((to, from, next) => {
     if (localStorage.getItem("isLogin") === "true") {
         this.$store.commit('setjwt', localStorage.getItem("jwt"))
@@ -113,11 +120,6 @@ router.beforeEach((to, from, next) => {
         router.push("/403")
     }
     next();
-})
-const router = new VueRouter({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes
 })
 
 export default router
