@@ -15,6 +15,7 @@
 import mainLayout from '@/layouts/mainLayout'
 import serverInfo from '@/components/serverInfo'
 import comm from '@/components/comm'
+import config from "@/config";
 
 export default {
   components: {
