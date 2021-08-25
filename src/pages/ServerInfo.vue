@@ -37,6 +37,7 @@ export default {
   },
   created() {
     this.getInfo();
+    this.getCerList();
     this.getInfo();
     this.timer = setInterval(this.getInfo, 3000)
   },
@@ -45,6 +46,51 @@ export default {
     next();
   },
   methods: {
+    getCerList: function () {
+      this.$http.get(config.apiAddress + '/web/Certificate', {
+        headers: {
+          'Authorization': "Bearer " + this.$store.state.jwt,
+          'Accept': 'application/json'
+        },
+      }).then(function (res) {
+        console.log(res.body)
+        let data = res.body;
+        this.certificateData = []
+        for (let i = 0; i < data.length; i++) {
+          this.certificateData.push({
+            id: data[i].id,
+            domain: data[i].DNSNames,
+            Issuer: data[i].Issuer,
+            Expires: new Date(data[i].NotAfter * 1000).getFullYear() + "-" + new Date(data[i].NotAfter * 1000).getMonth() + "-" + new Date(data[i].NotAfter * 1000).getDate(),
+            Issued: new Date(data[i].NotBefore * 1000).getFullYear() + "-" + new Date(data[i].NotBefore * 1000).getMonth() + "-" + new Date(data[i].NotBefore * 1000).getDate(),
+            active: parseInt(((Date.parse(new Date()) / 1000 - data[i].NotBefore / (data[i].NotAfter - data[i].NotBefore)) * 100)) >= 80 ? false : true
+          })
+        }
+        this.$http.get(config.apiAddress + '/web/ServerInfo/Certificate?id=' + this.$route.params.id, {
+          headers: {
+            'Authorization': "Bearer " + this.$store.state.jwt,
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          let data = res.body;
+          data.forEach(item => {
+            this.certificateOnServer.push(item.CertificateID)
+          })
+        }, function (res) {
+          this.$notify({
+            title: 'Server Warning',
+            message: res.status,
+            type: 'warning'
+          })
+        })
+      }, function (res) {
+        this.$notify({
+          title: 'Server Warning',
+          message: res.status,
+          type: 'warning'
+        })
+      })
+    },
     getInfo: function () {
       this.$store.state.ws.send("get@serverStatus#" + this.$route.params.id);
       this.requestLock = true;
